@@ -17,6 +17,10 @@
   },
   "homepage": "https://github.com/btollet/Matcha#readme",
   "dependencies": {
-    "ejs": "^1.0.0"
+    "express": "",
+    "ejs": "",
+    "mongodb": "",
+    "multer": "",
+    "nodemon": ""
   }
 }
