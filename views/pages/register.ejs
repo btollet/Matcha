@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <% include ../partials/head %>
+</head>
+
+<body>
+
+    <header>
+        <% include ../partials/header %>
+    </header>
+
+    <div class="container">
+        <script>
+        function register() {
+            var formData = new FormData();
+            formData.append("login", document.getElementById('login').value);
+            formData.append("pass", document.getElementById('pass').value);
+            formData.append("pass_confirm", document.getElementById('pass_confirm').value);
+            formData.append("mail", document.getElementById('mail').value);
+            var request = new XMLHttpRequest();
+            request.onload = () => {
+                if (request.readyState == 4 && request.status == 200) {
+                    let ret = (request.responseText);
+                    if (ret == 'Ok')
+                        console.log('Ok');
+                    else
+                        console.log('Error');
+                }
+            }
+            request.open("POST", "/register");
+            request.send(formData);
+        }
+
+        function login_check () {
+            let login = document.getElementById('login');
+            let div = document.getElementById('div_login');
+
+            if (login.value.length >= 3 && login.value.length <= 10)
+            {
+                login.setAttribute('class', 'form-control form-control-success');
+                div.setAttribute('class', 'form-group has-success');
+            }
+        }
+        </script>
+
+        <div class="jumbotron">
+            <h2>Inscription</h2>
+            <div id="div_login" class="form-group">
+                <label>Login</label>
+                <input type="text" class="form-control" id="login" placeholder="Login">
+                <script>document.getElementById('login').addEventListener('change', login_check);</script>
+            </div>
+            <div class="form-group">
+                <label >Mot de passe</label>
+                <input type="password" class="form-control" id="pass" placeholder="Mot de passe">
+            </div>
+            <div class="form-group">
+                <label>Mot de passe (confirmation)</label>
+                <input type="password" class="form-control" id="pass_confirm" placeholder="Mot de passe">
+            </div>
+            <div class="form-group">
+                <label>Adresse mail</label>
+                <input type="email" class="form-control" id="mail" placeholder="Mail">
+                <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+            </div>
+            <button type="submit" class="btn btn-primary" onclick="register()">S'incrire</button>
+        </div>
+    </div>
+
+    <footer>
+        <% include ../partials/footer %>
+    </footer>
+
+</body>
+
+</html>
