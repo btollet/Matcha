@@ -25,23 +25,27 @@ app.get('/register', (req, res) => {
 });
 
 app.post('/register', upload.fields([]), (req, res) => {
-    register.check_login(req.body.login, bdd, (val) => check_login = val);              // Login
-    register.check_mail(req.body.mail, bdd, (val) => check_mail = val);                // Mail
-    let check_pass = register.check_pass(req.body.pass, req.body.pass_confirm, bdd);    //Pass
+    register.check_login(req.body.login, bdd, (val) => {
+        check_login = val;              // Login
+        register.check_mail(req.body.mail, bdd, (val) => {
+            check_mail = val;                // Mail
+            let check_pass = register.check_pass(req.body.pass, req.body.pass_confirm, bdd);    //Pass
 
-    if (check_login == 'ok' && check_pass == 'ok' && check_mail == 'ok')
-    {
-        bdd.collection('users').insertOne({"login": req.body.login, "pass": req.body.pass, "mail": req.body.mail}, (err) => {
-            if (err) return(console.log(err));
-            console.log('Bdd add');
+            if (check_login == 'ok' && check_pass == 'ok' && check_mail == 'ok')
+            {
+                bdd.collection('users').insertOne({"login": req.body.login, "pass": req.body.pass, "mail": req.body.mail}, (err) => {
+                    if (err) return(console.log(err));
+                    console.log('Bdd add');
+                });
+            }
+            else {
+                console.log('----------------------------');
+                console.log('Login => ' + check_login);
+                console.log('Pass => ' + check_pass);
+                console.log('Mail => ' + check_mail);
+            }
         });
-    }
-    else {
-        console.log('----------------------------');
-        console.log('Login => ' + check_login);
-        console.log('Pass => ' + check_pass);
-        console.log('Mail => ' + check_mail);
-    }
+    });
     res.send('Ok');
 
 });

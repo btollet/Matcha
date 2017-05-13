@@ -34,7 +34,6 @@ module.exports = {
 
 function find_user(login, bdd, callback) {
     bdd.collection('users').find({login: login}).toArray((err, result) => {
-        console.log('in function'); 
         if (result[0])
             callback('exist');
         else
