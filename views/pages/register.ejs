@@ -19,22 +19,35 @@
             <div id="div_login" class="form-group">
                 <label>Login</label>
                 <input type="text" class="form-control" id="login" placeholder="Login">
-                <div id="login_err" class="form-control-feedback" hidden="hidden">Sorry, that username's taken. Try another?</div>
+                <div id="login_err" class="form-control-feedback" hidden="hidden"></div>
                 <small id="login_err_mes" class="form-text text-muted" hidden="hidden">Votre login doit avoir entre 3 et 10 carateres.</small>
                 <script>document.getElementById('login').addEventListener('change', login_check);</script>
             </div>
-            <div class="form-group">
+            <div id="div_pass" class="form-group">
                 <label >Mot de passe</label>
                 <input type="password" class="form-control" id="pass" placeholder="Mot de passe">
+                <div id="pass_err" class="form-control-feedback" hidden="hidden">Mot de passe trop simple</div>
+                <small id="pass_err_mes" class="form-text text-muted" hidden="hidden">Votre mot de passe doit contenir au moins:<br/>
+                    - 1 lettre minuscule<br/>
+                    - 1 lettre majuscule<br/>
+                    - 1 chiffre<br/>
+                    - 8 caracteres<br/>
+                    - Pas de caractere special</small>
+                <script>document.getElementById('pass').addEventListener('change', pass_check);</script>
             </div>
-            <div class="form-group">
+            <div id="div_pass_confirm" class="form-group">
                 <label>Mot de passe (confirmation)</label>
                 <input type="password" class="form-control" id="pass_confirm" placeholder="Mot de passe">
+                <div id="pass_confirm_err" class="form-control-feedback" hidden="hidden">Les deux mots sont differents</div>
+                <small id="pass_confirm_err_mes" class="form-text text-muted" hidden="hidden">Entrez le meme mot de passe</small>
+                <script>document.getElementById('pass_confirm').addEventListener('change', pass_confirm_check);</script>
             </div>
-            <div class="form-group">
+            <div id ='div_mail' class="form-group">
                 <label>Adresse mail</label>
                 <input type="email" class="form-control" id="mail" placeholder="Mail">
-                <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                <div id="mail_err" class="form-control-feedback" hidden="hidden"></div>
+                <small id="mail_err_mes" class="form-text text-muted" hidden="hidden"></small>
+                <script>document.getElementById('mail').addEventListener('change', mail_check);</script>
             </div>
             <button type="submit" class="btn btn-primary" onclick="register()">S'incrire</button>
         </div>

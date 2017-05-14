@@ -1,11 +1,34 @@
 <script>
+
+function sucess(form, div, err, err_mes) {
+    form.setAttribute('class', 'form-control form-control-success');
+    div.setAttribute('class', 'form-group has-success');
+    err.setAttribute('hidden', 'hidden');
+    err_mes.setAttribute('hidden', 'hidden');
+}
+
+function danger(form, div, err, err_mes) {
+    form.setAttribute('class', 'form-control form-control-danger');
+    div.setAttribute('class', 'form-group has-danger');
+    err.removeAttribute('hidden');
+    err_mes.removeAttribute('hidden');
+}
+
+function check_all() {
+    login_check();
+    pass_check();
+    mail_check();
+}
+
 function register() {
-    var formData = new FormData();
+    check_all();
+    window.scrollTo(0, 0);
+    let formData = new FormData();
     formData.append("login", document.getElementById('login').value);
     formData.append("pass", document.getElementById('pass').value);
     formData.append("pass_confirm", document.getElementById('pass_confirm').value);
     formData.append("mail", document.getElementById('mail').value);
-    var request = new XMLHttpRequest();
+    let request = new XMLHttpRequest();
     request.onload = () => {
         if (request.readyState == 4 && request.status == 200) {
             let ret = (request.responseText);
@@ -29,17 +52,10 @@ function login_check () {
 
     let request = new XMLHttpRequest();
     request.onload = () => {
-        console.log('ok');
         if (request.readyState == 4 && request.status == 200) {
             let exist = (request.responseText);
-            console.log(exist);
             if (login.value.length >= 3 && login.value.length <= 10 && exist == 'ok')
-            {
-                login.setAttribute('class', 'form-control form-control-success');
-                div.setAttribute('class', 'form-group has-success');
-                error.setAttribute('hidden', 'hidden');
-                error_mes.setAttribute('hidden', 'hidden');
-            }
+            sucess(login, div, error, error_mes);
             else
             {
                 login.setAttribute('class', 'form-control form-control-danger');
@@ -60,6 +76,70 @@ function login_check () {
         }
     }
     request.open("POST", "/login_check");
+    request.send(formData);
+}
+
+function pass_check() {
+    let pass = document.getElementById('pass');
+    let pass_confirm = document.getElementById('pass_confirm');
+    let div = document.getElementById('div_pass');
+    let error = document.getElementById('pass_err');
+    let error_mes = document.getElementById('pass_err_mes');
+    let regex = (/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/);
+
+    if (regex.test(pass.value))
+    sucess(pass, div, error, error_mes);
+    else
+    danger(pass, div, error, error_mes);
+    pass_confirm_check();
+}
+
+function pass_confirm_check() {
+    let pass = document.getElementById('pass');
+    let pass_confirm = document.getElementById('pass_confirm');
+    let div = document.getElementById('div_pass_confirm');
+    let error = document.getElementById('pass_confirm_err');
+    let error_mes = document.getElementById('pass_confirm_err_mes');
+
+    if (pass.value == pass_confirm.value)
+    sucess(pass_confirm, div, error, error_mes);
+    else
+    danger(pass_confirm, div, error, error_mes);
+}
+
+function mail_check() {
+    let mail = document.getElementById('mail');
+    let div = document.getElementById('div_mail');
+    let error = document.getElementById('mail_err');
+    let error_mes = document.getElementById('mail_err_mes');
+    let regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    let formData = new FormData();
+    formData.append("mail", mail.value);
+
+    let request = new XMLHttpRequest();
+    request.onload = () => {
+        if (request.readyState == 4 && request.status == 200) {
+            let exist = (request.responseText);
+            if (regex.test(mail.value))
+            sucess(mail, div, error, error_mes);
+            else
+            {
+                mail.setAttribute('class', 'form-control form-control-danger');
+                div.setAttribute('class', 'form-group has-danger');
+                error.removeAttribute('hidden');
+                error_mes.removeAttribute('hidden');
+                if (exist == 'exist') {
+                    error.innerHTML = 'Adresse mail deja utilise';
+                    error_mes.innerHTML = 'Prenez une adresse mail non associer a un compte deja existant'
+                }
+                else {
+                    error.innerHTML = 'Adresse mail non valide';
+                    error_mes.innerHTML = 'Verifez votre adresse mail';
+                }
+            }
+        }
+    }
+    request.open("POST", "/mail_check");
     request.send(formData);
 }
 </script>

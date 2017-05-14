@@ -13,6 +13,10 @@ module.exports = {
 
     check_login: (login, bdd, res) => {
         login_only(login, bdd, res);
+    },
+
+    check_mail: (mail, bdd, res) => {
+        mail_only(mail, bdd, res);
     }
 };
 
@@ -34,6 +38,14 @@ async function find_user(user, bdd, res) {
 
 async function login_only(login, bdd, res) {
     let count = await bdd.collection('users').find({login: login}).count();
+    if (count == 0)
+    res.end('ok');
+    else
+    res.end('exist');
+}
+
+async function mail_only(mail, bdd, res) {
+    let count = await bdd.collection('users').find({mail: mail}).count();
     if (count == 0)
     res.end('ok');
     else

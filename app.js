@@ -33,6 +33,10 @@ app.post('/login_check', upload.fields([]), (req, res) => {
     register.check_login(req.body.login, bdd, res);
 });
 
+app.post('/mail_check', upload.fields([]), (req, res) => {
+    register.check_mail(req.body.mail, bdd, res);
+});
+
 app.listen(3000, () => {
     console.log('Listening on port 3000');
 });
