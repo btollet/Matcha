@@ -21,6 +21,7 @@
     "ejs": "",
     "mongodb": "",
     "multer": "",
-    "nodemon": ""
+    "nodemon": "",
+    "bcrypt": ""
   }
 }

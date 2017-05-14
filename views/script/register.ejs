@@ -31,11 +31,8 @@ function register() {
     let request = new XMLHttpRequest();
     request.onload = () => {
         if (request.readyState == 4 && request.status == 200) {
-            let ret = (request.responseText);
-            if (ret == 'ok')
-            console.log('Ok');
-            else
-            console.log('Error:' + ret);
+            if (request.responseText == 'ok')
+                document.getElementById('main_div').innerHTML = '<center>Votre compte est creer<br/>Vous pouvez maintenant vous connecter</center>';
         }
     }
     request.open("POST", "/register");

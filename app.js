@@ -1,7 +1,6 @@
 var express = require('express');
 var multer = require('multer');
 var MongoClient = require('mongodb').MongoClient;
-var bcrypt = require('bcrypt');
 var upload = multer();
 var app = express();
 var bdd;
@@ -17,7 +16,6 @@ app.set('view engine', 'ejs');
 
 
 app.get('/', (req, res) => {
-    let test = 'Coucou';
     res.render('pages/index', { page: 'accueil'});
 });
 

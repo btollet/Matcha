@@ -1,3 +1,5 @@
+var bcrypt = require('bcrypt');
+
 module.exports = {
     check_user: (user, bdd, res) => {
         if (user.login.length >= 3 && user.login.length <= 10)
@@ -26,7 +28,9 @@ async function find_user(user, bdd, res) {
         {mail: user.mail}
     ]}).count();
     if (count == 0) {
-        bdd.collection('users').insertOne({"login": user.login, "pass": user.pass, "mail": user.mail}, (err) => {
+        let pass = await bcrypt.hash(user.pass, 10);
+        console.log('Pass => ' + pass);
+        bdd.collection('users').insertOne({"login": user.login, "pass": pass, "mail": user.mail}, (err) => {
             if (err) return(console.log(err));
             console.log('Bdd add');
         });
@@ -55,19 +59,17 @@ async function mail_only(mail, bdd, res) {
 function check_pass (pass, pass_confirm) {
     if (pass == pass_confirm)
     {
-        if (pass.length >= 8)
-        {
+        let regex = (/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/);
+        if (regex.test(pass))
             return ('ok');
-        }
-        else
         return ('len');
     }
-    else
     return ('diff');
 }
 
 function check_mail (mail) {
-    if (mail.length > 0)
-    return('ok');
+    let regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    if (regex.test(mail))
+        return('ok');
     return('error');
 }
