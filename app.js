@@ -18,11 +18,11 @@ app.set('view engine', 'ejs');
 
 app.get('/', (req, res) => {
     let test = 'Coucou';
-    res.render('pages/index', { test: test});
+    res.render('pages/index', { page: 'accueil'});
 });
 
 app.get('/register', (req, res) => {
-    res.render('pages/register');
+    res.render('pages/register', { page: 'register'});
 });
 
 app.post('/register', upload.fields([]), (req, res) => {
