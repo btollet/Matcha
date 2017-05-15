@@ -1,5 +1,3 @@
-<script>
-
 function sucess(form, div, err, err_mes) {
     form.setAttribute('class', 'form-control form-control-success');
     div.setAttribute('class', 'form-group has-success');
@@ -139,4 +137,3 @@ function mail_check() {
     request.open("POST", "/mail_check");
     request.send(formData);
 }
-</script>

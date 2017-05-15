@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <% include ../partials/head %>
+</head>
+
+<body>
+
+    <header>
+        <% include ../partials/header %>
+    </header>
+
+    <div class="container">
+        <script src='script/form.js'></script>
+
+        <div id="main_div" class="jumbotron">
+            <h2>Formulaire</h2>
+            <div id="div_f_name" class="form-group">
+                <label>Nom</label>
+                <input type="text" class="form-control" id="f_name" placeholder="Nom">
+                <div id="f_name_err" class="form-control-feedback" hidden="hidden"></div>
+                <small id="f_name_err_mes" class="form-text text-muted" hidden="hidden"></small>
+                <script>document.getElementById('f_name').addEventListener('change', f_name_check);</script>
+            </div>
+            <div id="div_name" class="form-group">
+                <label>Prenom</label>
+                <input type="text" class="form-control" id="name" placeholder="Prenom">
+                <div id="name_err" class="form-control-feedback" hidden="hidden"></div>
+                <small id="name_err_mes" class="form-text text-muted" hidden="hidden"></small>
+                <script>document.getElementById('name').addEventListener('change', name_check);</script>
+            </div>
+            <div class="form-group">
+                <label for="exampleSelect1">Sexe</label>
+                <select class="form-control" id="exampleSelect1">
+                    <option>♂ Homme</option>
+                    <option>♀ Femme</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary" onclick="register()">Enregistrer</button>
+        </div>
+    </div>
+
+    <footer>
+        <% include ../partials/footer %>
+    </footer>
+
+</body>
+
+</html>

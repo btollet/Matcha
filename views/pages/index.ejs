@@ -19,7 +19,11 @@
         let request = new XMLHttpRequest();
         request.onload = () => {
             if (request.readyState == 4 && request.status == 200) {
-
+                if (request.responseText == 'ok')
+                window.location.replace('/');
+                else {
+                    document.getElementById('err_mess').innerHTML = 'Mauvais login ou mot de passe';
+                }
             }
         }
         request.open("POST", "/log");
@@ -28,7 +32,8 @@
     </script>
 
     <div class="container">
-        <div class="jumbotron">
+        <div id="div_main" class="jumbotron">
+            <center><span id='err_mess'></span></center>
             <h2>Connexion</h2>
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Login</label>

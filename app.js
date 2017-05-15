@@ -7,11 +7,13 @@ var app = express();
 var bdd;
 
 //--- Include
+app.use(express.static('public'));
 let register_js = require('./include/register');
 let log_js = require('./include/log');
 
-app.use(session({secret: 'abc' }));
-var sess;
+
+app.use(session({secret: 'podl5amc-daso12w' }));
+let sess;
 
 
 MongoClient.connect('mongodb://localhost:27017', (err, base) => {
@@ -23,18 +25,26 @@ app.set('view engine', 'ejs');
 
 //--- App.get
 app.get('/', (req, res) => {
+    sess = req.session;
+    if (!sess.login)
     res.render('pages/index', { page: 'accueil'});
+    else
+    res.render('pages/form', { page: 'accueil'});
+});
+
+app.get('/deco', (req, res) => {
+    req.session.destroy();
+    res.send('Deco !');
 });
 
 app.get('/register', (req, res) => {
-    res.render('pages/register', { page: 'register'});
-});
-
-app.get('/test', (req, res) => {
     sess = req.session;
-
-    res.send(sess.login);
+    if (!sess.login)
+    res.render('pages/register', { page: 'register'});
+    else
+    res.render('pages/form', { page: 'accueil'});
 });
+
 
 //--- App.post
 app.post('/register', upload.fields([]), (req, res) => {
