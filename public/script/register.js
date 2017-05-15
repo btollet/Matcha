@@ -37,6 +37,54 @@ function register() {
     request.send(formData);
 }
 
+function f_name_check () {
+    let f_name = document.getElementById('f_name');
+    let div = document.getElementById('div_f_name');
+    let error = document.getElementById('f_name_err');
+    let error_mes = document.getElementById('f_name_err_mes');
+    let regex = /^[a-zA-Z ]+$/;
+
+    if (f_name.value.length > 20) {
+        error.innerHTML = 'Limiter a 20 characteres';
+        error_mes.innerHTML = '';
+        danger(f_name, div, error, error_mes);
+    }
+    else
+    {
+        if (regex.test(f_name.value))
+        sucess(f_name, div, error, error_mes);
+        else {
+            error.innerHTML = 'Nom invalide';
+            error_mes.innerHTML = 'Seul les lettres et les espaes sont autorise';
+            danger(f_name, div, error, error_mes);
+        }
+    }
+}
+
+function name_check () {
+    let name = document.getElementById('name');
+    let div = document.getElementById('div_name');
+    let error = document.getElementById('name_err');
+    let error_mes = document.getElementById('name_err_mes');
+    let regex = /^[a-zA-Z ]+$/;
+
+    if (name.value.length > 20) {
+        error.innerHTML = 'Limiter a 20 characteres';
+        error_mes.innerHTML = '';
+        danger(name, div, error, error_mes);
+    }
+    else
+    {
+        if (regex.test(name.value))
+        sucess(name, div, error, error_mes);
+        else {
+            error.innerHTML = 'Prenom invalide';
+            error_mes.innerHTML = 'Seul les lettres et les espaes sont autorise';
+            danger(name, div, error, error_mes);
+        }
+    }
+}
+
 function login_check () {
     let login = document.getElementById('login');
     let div = document.getElementById('div_login');
