@@ -9,7 +9,7 @@ var bdd;
 //--- Include
 app.use(express.static('public'));
 let register_js = require('./include/register');
-let log_js = require('./include/log');
+let log_js = require('./include/login');
 
 
 app.use(session({secret: 'podl5amc-daso12w' }));
@@ -59,7 +59,7 @@ app.post('/mail_check', upload.fields([]), (req, res) => {
     register_js.check_mail(req.body.mail, bdd, res);
 });
 
-app.post('/log', upload.fields([]), (req, res) => {
+app.post('/login', upload.fields([]), (req, res) => {
     log_js.log_user(req.body, bdd, res, req.session);
 });
 

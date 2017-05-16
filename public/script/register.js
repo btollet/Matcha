@@ -13,6 +13,8 @@ function danger(form, div, err, err_mes) {
 }
 
 function check_all() {
+    f_name_check();
+    name_check();
     login_check();
     pass_check();
     mail_check();
@@ -26,6 +28,8 @@ function register() {
     formData.append("pass", document.getElementById('pass').value);
     formData.append("pass_confirm", document.getElementById('pass_confirm').value);
     formData.append("mail", document.getElementById('mail').value);
+    formData.append("f_name", document.getElementById('f_name').value);
+    formData.append("name", document.getElementById('name').value);
     let request = new XMLHttpRequest();
     request.onload = () => {
         if (request.readyState == 4 && request.status == 200) {
@@ -163,7 +167,7 @@ function mail_check() {
     request.onload = () => {
         if (request.readyState == 4 && request.status == 200) {
             let exist = (request.responseText);
-            if (regex.test(mail.value))
+            if (regex.test(mail.value) && exist == 'ok')
             sucess(mail, div, error, error_mes);
             else
             {

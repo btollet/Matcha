@@ -4,7 +4,7 @@ module.exports = {
     check_user: (user, bdd, res) => {
         if (user.login.length >= 3 && user.login.length <= 10)
         {
-            if (check_pass(user.pass, user.pass_confirm) == 'ok' && check_mail(user.mail) == 'ok')
+            if (check_pass(user.pass, user.pass_confirm) == 'ok' && check_mail(user.mail) == 'ok' && check_name(user.f_name, user.name) == 'ok')
             find_user(user, bdd, res);
             else
             res.end('Password ou mail err');
@@ -22,6 +22,7 @@ module.exports = {
     }
 };
 
+//--- async
 async function find_user(user, bdd, res) {
     let count = await bdd.collection('users').find({$or: [
         {login: user.login},
@@ -29,10 +30,15 @@ async function find_user(user, bdd, res) {
     ]}).count();
     if (count == 0) {
         let pass = await bcrypt.hash(user.pass, 10);
-        console.log('Pass => ' + pass);
-        bdd.collection('users').insertOne({"login": user.login, "pass": pass, "mail": user.mail}, (err) => {
+        bdd.collection('users').insertOne({
+            "login": user.login,
+            "f_name": user.f_name,
+            "name": user.name,
+            "pass": pass,
+            "mail": user.mail
+        }, (err) => {
             if (err) return(console.log(err));
-            console.log('Bdd add');
+            console.log('Bdd add user: ' + user.login);
         });
         res.end('ok');
     }
@@ -56,12 +62,14 @@ async function mail_only(mail, bdd, res) {
     res.end('exist');
 }
 
+
+//--- function
 function check_pass (pass, pass_confirm) {
     if (pass == pass_confirm)
     {
         let regex = (/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/);
         if (regex.test(pass))
-            return ('ok');
+        return ('ok');
         return ('len');
     }
     return ('diff');
@@ -70,6 +78,15 @@ function check_pass (pass, pass_confirm) {
 function check_mail (mail) {
     let regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     if (regex.test(mail))
-        return('ok');
+    return('ok');
+    return('error');
+}
+
+function check_name(f_name, name) {
+    let regex = /^[a-zA-Z ]+$/;
+    if (!name || !f_name)
+    return('error');
+    if (regex.test(f_name) && regex.test(name))
+    return('ok');
     return('error');
 }
