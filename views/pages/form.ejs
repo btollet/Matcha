@@ -40,29 +40,35 @@
                     <label>Biographie</label>
                     <textarea class="form-control" id="exampleTextarea" rows="3"></textarea>
                 </div>
-                <div class="form-group">
+                <div id="add_tag_div" class="form-group">
                     <label>Centre d'interet</label>
                     <div class="form-inline">
                         <input type="text" class="form-control mb-2 mr-sm-2 mb-sm-0" id="add_tag" placeholder="#bg">
                         <button type="submit" class="btn btn-primary mb-2 mr-sm-2 mb-sm-0" onclick="add_tag()">Ajouter</button>
                     </div>
-                    <small id="name_err_mes" class="form-text text-muted">Sous forme de tag sans espace(ex: #bio, #geek, #piercing etc ...)</small>
+                    <small class="form-text text-muted">Sous forme de tag sans espace(ex: #bio, #geek, #piercing etc ...)</small>
+                    <div id="add_tag_err" class="form-control-feedback" hidden="hidden">Erreur dans le tag</div>
+                    <small id="add_tag_err_mes" class="form-text text-muted" hidden="hidden">Votre tag doit:<br/>
+                        - Commencer pas un #<br/>
+                        - Contenir uniquement des lettres et chiffres<br/>
+                        - Posseder entre 1 et 20 caracteres (# non compris)
+                    </small>
                 </div>
                 <div class="form-group">
                     <div class="form-inline">
-                        <fieldset disabled>
-                            <select class="form-control mb-2 mr-sm-2 mb-sm-0" id="exampleSelect1">
+                        <fieldset id="my_tag_dis" disabled>
+                            <select class="form-control mb-2 mr-sm-2 mb-sm-0" id="my_tag">
                                 <option>Aucun centre d'interet</option>
                             </select>
                         </fieldset>
-                        <button type="submit" class="btn btn-primary">Retirer</button>
+                        <button type="submit" class="btn btn-primary" onclick="del_tag()">Retirer</button>
                     </div>
                 </div>
                 <div class="form-group">
                     <label>Photo de profil</label>
                     <input type="file" class="form-control-file" id="exampleInputFile" aria-describedby="fileHelp">
                 </div>
-                <button type="submit" class="btn btn-primary" onclick="">Plus tard</button> <button type="submit" class="btn btn-primary" onclick="register()">Enregistrer</button>
+                <button type="submit" class="btn btn-primary" onclick="skip()">Plus tard</button> <button type="submit" class="btn btn-primary" onclick="register()">Enregistrer</button>
             </div>
         </div>
 
