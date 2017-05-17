@@ -5,21 +5,38 @@
     <a href="/" class="navbar-brand">Matcha</a>
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <% if (!login) { %>
         <ul class="navbar-nav mr-auto">
             <% if (page == 'accueil'){ %>
                 <li class="nav-item active">
             <% } else { %>
                 <li class="nav-item">
-                    <% } %>
-                    <a class="nav-link" href="/">Accueil</a>
-                </li>
-                <% if (page == 'register'){ %>
+            <% } %>
+            <a class="nav-link" href="/">Accueil</a>
+            </li>
+            <% if (page == 'register'){ %>
                 <li class="nav-item active">
-                <% } else { %>
+            <% } else { %>
                 <li class="nav-item">
-                <% } %>
-                    <a class="nav-link" href="/register">Inscription</a>
-                </li>
+            <% } %>
+            <a class="nav-link" href="/register">Inscription</a>
+            </li>
         </ul>
+    <% } else { %>
+        <ul class="navbar-nav mr-auto">
+            <% if (page == 'accueil'){ %>
+                <li class="nav-item active">
+            <% } else { %>
+                <li class="nav-item">
+            <% } %>
+            <a class="nav-link" href="/">Accueil</a>
+            </li>
+        </ul>
+        <ul class="navbar-nav my-2 my-lg-0">
+            <li class="nav-item">
+                <a class="nav-link" href="/deco">Deconnexion</a>
+            </li>
+        </ul>
+    <% } %>
     </div>
 </nav>

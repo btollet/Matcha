@@ -2,7 +2,7 @@ var express = require('express');
 var multer = require('multer');
 var MongoClient = require('mongodb').MongoClient;
 var session = require('express-session');
-var upload = multer();
+var upload = multer({ dest: 'public/picture/', filename: 'test'});
 var app = express();
 var bdd;
 
@@ -10,6 +10,7 @@ var bdd;
 app.use(express.static('public'));
 let register_js = require('./include/register');
 let log_js = require('./include/login');
+let tag_js = require('./include/tag');
 
 
 app.use(session({secret: 'podl5amc-daso12w' }));
@@ -27,22 +28,22 @@ app.set('view engine', 'ejs');
 app.get('/', (req, res) => {
     sess = req.session;
     if (!sess.login)
-    res.render('pages/index', { page: 'accueil'});
+    res.render('pages/index', { page: 'accueil', login: null});
     else
-    res.render('pages/form', { page: 'accueil'});
+    form(sess, res);
 });
 
 app.get('/deco', (req, res) => {
     req.session.destroy();
-    res.send('Deco !');
+    res.render('pages/index', { page: 'accueil', login: null});
 });
 
 app.get('/register', (req, res) => {
     sess = req.session;
     if (!sess.login)
-    res.render('pages/register', { page: 'register'});
+    res.render('pages/register', { page: 'register', login: null});
     else
-    res.render('pages/form', { page: 'accueil'});
+    form(sess, res);
 });
 
 
@@ -62,6 +63,25 @@ app.post('/mail_check', upload.fields([]), (req, res) => {
 app.post('/login', upload.fields([]), (req, res) => {
     log_js.log_user(req.body, bdd, res, req.session);
 });
+
+app.post('/add_tag', upload.fields([]), (req, res) => {
+    tag_js.add_tag(req.body.tag, bdd, res, req.session);
+});
+
+app.post('/del_tag', upload.fields([]), (req, res) => {
+    tag_js.del_tag(req.body.tag, bdd, res, req.session);
+});
+
+app.post('/picture', upload.single('test'), (req, res) => {
+    console.log(req.file);
+    res.send(req.file.filename);
+});
+
+//--- Async
+async function form(sess, res) {
+    let tag = await bdd.collection('tag').find({ login: sess.login }).toArray();
+    res.render('pages/form', { page: 'accueil', tag: tag, login: sess.login});
+}
 
 
 app.listen(3000, () => {

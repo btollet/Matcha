@@ -45,29 +45,78 @@ function add_tag() {
     let regex = /^#([a-z0-9]{1,20})$/;
 
     if (regex.test(tag.value)) {
-        sucess(tag, div, err, err_mes);
-        if (my_tag_dis.hasAttribute('disabled')) {
-            my_tag.remove("Aucun centre d'interet");
-            my_tag_dis.removeAttribute('disabled');
+        let formData = new FormData();
+        formData.append("tag", tag.value);
+
+        let request = new XMLHttpRequest();
+        request.onload = () => {
+            if (request.readyState == 4 && request.status == 200) {
+                if (request.responseText == 'ok') {
+                    sucess(tag, div, err, err_mes);
+                    if (my_tag_dis.hasAttribute('disabled')) {
+                        my_tag.remove("Aucun centre d'interet");
+                        my_tag_dis.removeAttribute('disabled');
+                    }
+                    let option = document.createElement("option");
+                    option.text = tag.value;
+                    my_tag.add(option);
+                }
+                else {
+                    tag.setAttribute('class', 'form-control form-control-danger mb-2 mr-sm-2 mb-sm-0');
+                    div.setAttribute('class', 'form-group has-danger');
+                    err.removeAttribute('hidden');
+                    err.innerHTML = 'Vous utilisez deja ce tag';
+                    err_mes.setAttribute('hidden', 'hidden');
+                }
+            }
         }
-        let option = document.createElement("option");
-        option.text = tag.value;
-        my_tag.add(option);
+        request.open("POST", "/add_tag");
+        request.send(formData);
     }
-    else
-    danger(tag, div, err, err_mes);
+    else {
+        err.innerHTML = 'Erreur dans le tag';
+        danger(tag, div, err, err_mes);
+    }
 }
 
 function del_tag() {
     let my_tag = document.getElementById('my_tag');
-    if (!my_tag_dis.hasAttribute('disabled')) {
-        my_tag.remove(my_tag.value);
-        if (my_tag.length == 0) {
-            document.getElementById('my_tag_dis').setAttribute('disabled', '');
-            let option = document.createElement("option");
-            option.text = "Aucun centre d'interet";
-            my_tag.add(option);
-        }
 
+    if (!my_tag_dis.hasAttribute('disabled')) {
+        let formData = new FormData();
+        formData.append("tag", my_tag.value);
+
+        let request = new XMLHttpRequest();
+        request.onload = () => {
+            if (request.readyState == 4 && request.status == 200) {
+                if (request.responseText == 'ok') {
+                    my_tag.remove(my_tag.selectedIndex);
+                    if (my_tag.length == 0) {
+                        document.getElementById('my_tag_dis').setAttribute('disabled', '');
+                        let option = document.createElement("option");
+                        option.text = "Aucun centre d'interet";
+                        my_tag.add(option);
+                    }
+                }
+            }
+        }
+        request.open("POST", "/del_tag");
+        request.send(formData);
     }
+}
+
+function picture() {
+    let formData = new FormData();
+    formData.append("test", document.getElementById('picture').files[0]);
+
+    let request = new XMLHttpRequest();
+    request.onload = () => {
+        if (request.readyState == 4 && request.status == 200) {
+            if (request.responseText) {
+                document.getElementById('picture_preview').setAttribute('src', 'picture/' + request.responseText )
+            }
+        }
+    }
+    request.open("POST", "/picture");
+    request.send(formData);
 }

@@ -43,7 +43,7 @@
                 <div id="add_tag_div" class="form-group">
                     <label>Centre d'interet</label>
                     <div class="form-inline">
-                        <input type="text" class="form-control mb-2 mr-sm-2 mb-sm-0" id="add_tag" placeholder="#bg">
+                        <input type="text" class="form-control mb-2 mr-sm-2 mb-sm-0" id="add_tag" placeholder="#bg" maxlength="21">
                         <button type="submit" class="btn btn-primary mb-2 mr-sm-2 mb-sm-0" onclick="add_tag()">Ajouter</button>
                     </div>
                     <small class="form-text text-muted">Sous forme de tag sans espace(ex: #bio, #geek, #piercing etc ...)</small>
@@ -56,9 +56,13 @@
                 </div>
                 <div class="form-group">
                     <div class="form-inline">
-                        <fieldset id="my_tag_dis" disabled>
+                        <fieldset id="my_tag_dis" <% if (!tag[0]) { %> disabled <% } %>>
                             <select class="form-control mb-2 mr-sm-2 mb-sm-0" id="my_tag">
-                                <option>Aucun centre d'interet</option>
+                                <% if (!tag[0]) { %>
+                                    <option>Aucun centre d'interet</option>
+                                <% } else { tag.forEach(function(val) {%>
+                                    <option><%= val.tag %></option>
+                                <% })} %>
                             </select>
                         </fieldset>
                         <button type="submit" class="btn btn-primary" onclick="del_tag()">Retirer</button>
@@ -66,7 +70,8 @@
                 </div>
                 <div class="form-group">
                     <label>Photo de profil</label>
-                    <input type="file" class="form-control-file" id="exampleInputFile" aria-describedby="fileHelp">
+                    <input type="file" class="form-control-file" id="picture" aria-describedby="fileHelp"><button type="submit" class="btn btn-primary" onclick="picture()">Ok</button>
+                    <img id="picture_preview" src="picture/default.jpg" width="200" height="200">
                 </div>
                 <button type="submit" class="btn btn-primary" onclick="skip()">Plus tard</button> <button type="submit" class="btn btn-primary" onclick="register()">Enregistrer</button>
             </div>
