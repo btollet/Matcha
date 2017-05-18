@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <% include ../partials/head %>
+</head>
+
+<body>
+
+    <header>
+        <% include ../partials/header %>
+    </header>
+
+    <script>
+    function connexion() {
+        let formData = new FormData();
+        formData.append('login', document.getElementById('login').value);
+        formData.append('pass', document.getElementById('pass').value);
+        let request = new XMLHttpRequest();
+        request.onload = () => {
+            if (request.readyState == 4 && request.status == 200) {
+                if (request.responseText == 'ok')
+                window.location.replace('/');
+                else {
+                    document.getElementById('err_mess').innerHTML = 'Mauvais login ou mot de passe';
+                }
+            }
+        }
+        request.open("POST", "/login");
+        request.send(formData);
+    }
+    </script>
+
+    <div class="container">
+        <div id="main_div" class="jumbotron">
+            <center><h3><b><u><%= user.login %></u></b></h3>
+                <% profil = null
+             pic.forEach(function(val) {
+                if (val.type == 'profil') {
+                     profil = val.name
+                }
+            }) %>
+                <img id="picture_preview" height="200px" width="200px"
+                <% if (profil) {%>
+                    src="picture/<%= profil %>"
+                <% } else { %>
+                    src="picture/default.jpg"
+                <% } %>
+                ></center>
+            <br/>
+            <div class="row">
+                <div class="col-sm-3">
+                    <div class="card">
+                        <div class="card-header">
+                            <%= login %>
+                        </div>
+                        <div class="card-block">
+                            <blockquote class="card-blockquote">
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.</p>
+                                <footer>Someone famous in <cite title="Source Title">Source Title</cite></footer>
+                            </blockquote>
+                        </div>
+                    </div><br/>
+                    <div class="card">
+                        <div class="card-header">
+                            Tags
+                        </div>
+                        <div class="card-block">
+                            <blockquote class="card-blockquote">
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.</p>
+                                <footer>Someone famous in <cite title="Source Title">Source Title</cite></footer>
+                            </blockquote>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-9">
+                    <div class="card">
+                        <div class="card-header">
+                            Description
+                        </div>
+                        <div class="card-block">
+                            <blockquote class="card-blockquote">
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.</p>
+                                <footer>Someone famous in <cite title="Source Title">Source Title</cite></footer>
+                            </blockquote>
+                        </div>
+                    </div><br/>
+                    <div class="card">
+                        <div class="card-header">
+                            Photos
+                        </div>
+                        <div class="card-block">
+                            <blockquote class="card-blockquote">
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.</p>
+                                <footer>Someone famous in <cite title="Source Title">Source Title</cite></footer>
+                            </blockquote>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <% include ../partials/footer %>
+    </footer>
+
+</body>

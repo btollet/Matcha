@@ -28,11 +28,7 @@ app.set('view engine', 'ejs');
 
 //--- App.get
 app.get('/', (req, res) => {
-    sess = req.session;
-    if (!sess.login)
-    res.render('pages/index', { page: 'accueil', login: null});
-    else
-        page_js.call_page('form', bdd, res, sess);
+    page_js.call_page('wall', bdd, res, req.session, null);
 });
 
 app.get('/deco', (req, res) => {
@@ -41,11 +37,11 @@ app.get('/deco', (req, res) => {
 });
 
 app.get('/register', (req, res) => {
-    sess = req.session;
-    if (!sess.login)
-    res.render('pages/register', { page: 'register', login: null});
-    else
-    page_js.call_page('form', bdd, res, sess);
+    page_js.call_page('register', bdd, res, req.session, null);
+});
+
+app.get('/account', (req, res) => {
+    page_js.call_page('account', bdd, res, req.session, req.query.login);
 });
 
 
@@ -84,7 +80,11 @@ app.post('/picture', upload.single('test'), (req, res) => {
 });
 
 app.post('/form', upload.fields([]), (req, res) => {
-    profil_js.save_all(req.body, bdd, res, sess);
+    profil_js.save_all(req.body, bdd, res, req.session);
+});
+
+app.post('/form_skip', upload.fields([]), (req, res) => {
+    profil_js.skip(bdd, res, req.session);
 });
 
 

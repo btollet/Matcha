@@ -50,7 +50,18 @@ function send() {
 }
 
 function skip() {
-    alert('/!\\ Il est conseiller de remplir ce formulaire affin de trouver les personnes qui vous correspondent \n- Si vous ne souhaiter pas remplir le formulaire tout de suite vous serez considerez comme Bisexuelle\n- Si vous avez deja entrer des tags ils seront quand meme enregistrer\n\nSouhaiter vous continuer sans remplir le formulaire?');
+    if(confirm('/!\\ Il est conseiller de remplir ce formulaire affin de trouver les personnes qui vous correspondent \n- Si vous ne souhaiter pas remplir le formulaire tout de suite vous serez considerez comme Bisexuelle\n- Si vous avez deja entrer des tags ils seront quand meme enregistrer\n\nSouhaiter vous continuer sans remplir le formulaire?')) {
+        let request = new XMLHttpRequest();
+        request.onload = () => {
+            if (request.readyState == 4 && request.status == 200) {
+                console.log(request.responseText);
+                if (request.responseText == 'ok')
+                document.getElementById('main_div').innerHTML = '<center>Formulaire skip</center>';
+            }
+        }
+        request.open("POST", "/form_skip");
+        request.send();
+    }
 }
 
 function add_tag() {

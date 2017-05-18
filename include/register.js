@@ -24,8 +24,9 @@ module.exports = {
 
 //--- async
 async function find_user(user, bdd, res) {
+    let regex = new RegExp(["^", user.login, "$"].join(""), "i");
     let count = await bdd.collection('users').find({$or: [
-        {login: user.login},
+        {login: regex},
         {mail: user.mail}
     ]}).count();
     if (count == 0) {
@@ -52,7 +53,9 @@ async function find_user(user, bdd, res) {
 }
 
 async function login_only(login, bdd, res) {
-    let count = await bdd.collection('users').find({login: login}).count();
+    let regex = new RegExp(["^", login, "$"].join(""), "i");
+    console.log('=> ' + regex);
+    let count = await bdd.collection('users').find({login: regex}).count();
     if (count == 0)
     res.end('ok');
     else

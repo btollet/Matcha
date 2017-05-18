@@ -1,5 +1,5 @@
 module.exports = {
-    save_all(form, bdd, res, sess) {
+    save_all: (form, bdd, res, sess) => {
         if (check_gender(form) && check_age(form) && check_orient(form) && check_bio(form)) {
             bdd.collection('users').update({ login: sess.login },
             {
@@ -10,10 +10,24 @@ module.exports = {
                 bio: form.bio,
                 first_form: 'ok'}
             });
+            sess.first_form = 'ok';
+            console.log(sess);
             res.end('ok');
         }
         else
         res.end('error');
+    },
+
+    skip: (bdd, res, sess) => {
+        bdd.collection('users').update({ login: sess.login },
+        {
+            $set: {
+            orientation: 'Bisexuel',
+            first_form: 'ok' }
+        });
+        sess.first_form = 'ok';
+        console.log(sess);
+        res.end('ok');
     }
 }
 
@@ -35,7 +49,7 @@ function check_age (form) {
 }
 
 function check_orient (form) {
-    if (form.orientation === 'Heterosexuelle' || form.orientation === 'Gay / Lesbienne' || form.orientation === 'Bisexuel')
+    if (form.orientation === 'Heterosexuel' || form.orientation === 'Gay / Lesbienne' || form.orientation === 'Bisexuel')
     return (true);
     return (false);
 }

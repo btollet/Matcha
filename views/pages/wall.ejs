@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <% include ../partials/head %>
+</head>
+
+<body>
+
+    <header>
+        <% include ../partials/header %>
+    </header>
+
+    <script>
+    function connexion() {
+        let formData = new FormData();
+        formData.append('login', document.getElementById('login').value);
+        formData.append('pass', document.getElementById('pass').value);
+        let request = new XMLHttpRequest();
+        request.onload = () => {
+            if (request.readyState == 4 && request.status == 200) {
+                if (request.responseText == 'ok')
+                window.location.replace('/');
+                else {
+                    document.getElementById('err_mess').innerHTML = 'Mauvais login ou mot de passe';
+                }
+            }
+        }
+        request.open("POST", "/login");
+        request.send(formData);
+    }
+    </script>
+
+    <div class="container">
+        <div id="main_div" class="jumbotron">
+            Bonjour <%= login %>
+        </div>
+    </div>
+
+    <footer>
+        <% include ../partials/footer %>
+    </footer>
+
+</body>
+
+</html>

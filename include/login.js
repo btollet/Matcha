@@ -12,6 +12,7 @@ async function check_user(user, bdd, res, sess) {
         let check_pass = await bcrypt.compare(user.pass, find.pass);
         if (check_pass == true) {
             sess.login = user.login;
+            sess.first_form = find.first_form;
             res.end('ok');
         }
         else
