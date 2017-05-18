@@ -18,27 +18,33 @@
             <h2>Formulaire</h2>
             <div id="div_f_name" class="form-group">
                 <div class="form-group">
-                    <label for="exampleSelect1">Sexe</label>
-                    <select class="form-control" id="exampleSelect1">
+                    <label>Sexe</label>
+                    <select class="form-control" id="gender">
                         <option>♂ Homme</option>
                         <option>♀ Femme</option>
                     </select>
                 </div>
                 <div class="form-group">
                     <label>Age</label>
-                    <input class="form-control" type="number" value="42" id="age">
+                    <input class="form-control" type="number" value="42" min="16" max="120" id="age">
                 </div>
                 <div class="form-group">
-                    <label for="exampleSelect1">Orientation</label>
-                    <select class="form-control" id="exampleSelect1">
+                    <label>Orientation</label>
+                    <select class="form-control" id="orientation">
                         <option>Heterosexuelle</option>
                         <option>Gay / Lesbienne</option>
                         <option>Bisexuel</option>
                     </select>
                 </div>
-                <div class="form-group">
+                <div id="bio_div" class="form-group">
                     <label>Biographie</label>
-                    <textarea class="form-control" id="exampleTextarea" rows="3"></textarea>
+                    <textarea class="form-control" id="bio" rows="3"></textarea>
+                    <script>document.getElementById('bio').onkeyup = bio_count;</script>
+                    <div class="row">
+                        <div class="col-10"></div>
+                        <div class="col-2"><small class="form-text text-muted">Restant: <span id="bio_count">500</span></small></div>
+                    </div>
+                    <div id="bio_err" class="form-control-feedback" hidden="hidden">Caracteres speciaux interdit</div>
                 </div>
                 <div id="add_tag_div" class="form-group">
                     <label>Centre d'interet</label>
@@ -69,11 +75,26 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label>Photo de profil</label>
-                    <input type="file" class="form-control-file" id="picture" aria-describedby="fileHelp"><button type="submit" class="btn btn-primary" onclick="picture()">Ok</button>
-                    <img id="picture_preview" src="picture/default.jpg" width="200" height="200">
+                    <label>Photo de profil</label><br/>
+                    <% profil = null
+                     pic.forEach(function(val) {
+                        if (val.type == 'profil') {
+                             profil = val.name
+                        }
+                    }) %>
+                        <img id="picture_preview" height="200px" width="200px"
+                        <% if (profil) {%>
+                            src="picture/<%= profil %>"
+                        <% } else { %>
+                            src="picture/default.jpg"
+                        <% } %>
+                        ><br/><br/>
+                    <input type="file" class="form-control-file" id="picture" aria-describedby="fileHelp">
+                    <script>document.getElementById('picture').addEventListener('change', picture);</script>
+                    <small class="form-text text-muted">Vous pourrez rajouter d'autres photos par la suite dans la section "mon profil"</small>
                 </div>
-                <button type="submit" class="btn btn-primary" onclick="skip()">Plus tard</button> <button type="submit" class="btn btn-primary" onclick="register()">Enregistrer</button>
+                <button type="submit" class="btn btn-primary" onclick="skip()">Plus tard</button>
+                <button type="submit" class="btn btn-primary" onclick="send()">Enregistrer</button>
             </div>
         </div>
 

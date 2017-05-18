@@ -1,5 +1,6 @@
 module.exports = {
     add_tag: (tag, bdd, res, sess) => {
+        tag = tag.toLowerCase();
         if (verif_tag(tag))
         add_tag_part2(tag, bdd, res, sess);
         else
@@ -34,6 +35,6 @@ async function del_tag_part2(tag, bdd, res, sess) {
 
 //--- function
 function verif_tag(tag) {
-    let regex = /^#([a-z0-9]{1,20})$/;
+    let regex = /^#([a-zA-Z0-9]{1,20})$/;
     return(regex.test(tag));
 }

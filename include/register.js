@@ -35,7 +35,12 @@ async function find_user(user, bdd, res) {
             "f_name": user.f_name,
             "name": user.name,
             "pass": pass,
-            "mail": user.mail
+            "mail": user.mail,
+            "gender": '',
+            "age": '',
+            "orientation": '',
+            "bio": '',
+            "first_form": ''
         }, (err) => {
             if (err) return(console.log(err));
             console.log('Bdd add user: ' + user.login);

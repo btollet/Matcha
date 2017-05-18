@@ -2,7 +2,7 @@ var express = require('express');
 var multer = require('multer');
 var MongoClient = require('mongodb').MongoClient;
 var session = require('express-session');
-var upload = multer({ dest: 'public/picture/', filename: 'test'});
+var upload = multer({ dest: 'public/picture/'});
 var app = express();
 var bdd;
 
@@ -11,6 +11,8 @@ app.use(express.static('public'));
 let register_js = require('./include/register');
 let log_js = require('./include/login');
 let tag_js = require('./include/tag');
+let page_js = require('./include/pages');
+let profil_js = require('./include/profil');
 
 
 app.use(session({secret: 'podl5amc-daso12w' }));
@@ -30,7 +32,7 @@ app.get('/', (req, res) => {
     if (!sess.login)
     res.render('pages/index', { page: 'accueil', login: null});
     else
-    form(sess, res);
+        page_js.call_page('form', bdd, res, sess);
 });
 
 app.get('/deco', (req, res) => {
@@ -43,7 +45,7 @@ app.get('/register', (req, res) => {
     if (!sess.login)
     res.render('pages/register', { page: 'register', login: null});
     else
-    form(sess, res);
+    page_js.call_page('form', bdd, res, sess);
 });
 
 
@@ -73,15 +75,17 @@ app.post('/del_tag', upload.fields([]), (req, res) => {
 });
 
 app.post('/picture', upload.single('test'), (req, res) => {
-    console.log(req.file);
+    bdd.collection('picture').insertOne({
+        login: req.session.login,
+        name: req.file.filename,
+        type: req.body.picture
+    });
     res.send(req.file.filename);
 });
 
-//--- Async
-async function form(sess, res) {
-    let tag = await bdd.collection('tag').find({ login: sess.login }).toArray();
-    res.render('pages/form', { page: 'accueil', tag: tag, login: sess.login});
-}
+app.post('/form', upload.fields([]), (req, res) => {
+    profil_js.save_all(req.body, bdd, res, sess);
+});
 
 
 app.listen(3000, () => {

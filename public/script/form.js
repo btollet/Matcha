@@ -12,22 +12,40 @@ function danger(form, div, err, err_mes) {
     err_mes.removeAttribute('hidden');
 }
 
-function register() {
-    check_all();
+function bio_count () {
+    let count = document.getElementById('bio_count');
+    let div = document.getElementById('bio_div');
+    let bio = document.getElementById('bio');
+    let bio_err = document.getElementById('bio_err');
+    let regex = /^[a-zA-Z0-9 ]*$/;
+
+    count.innerHTML = 500 - bio.value.length;
+    if (regex.test(bio.value)) {
+        div.setAttribute('class', 'form-group has-success');
+        bio_err.setAttribute('hidden', 'hidden');
+    }
+    else {
+        bio_err.removeAttribute('hidden');
+        div.setAttribute('class', 'form-group has-danger');
+    }
+}
+
+function send() {
     window.scrollTo(0, 0);
     let formData = new FormData();
-    formData.append("login", document.getElementById('login').value);
-    formData.append("pass", document.getElementById('pass').value);
-    formData.append("pass_confirm", document.getElementById('pass_confirm').value);
-    formData.append("mail", document.getElementById('mail').value);
+    formData.append("gender", document.getElementById('gender').value);
+    formData.append("age", document.getElementById('age').value);
+    formData.append("orientation", document.getElementById('orientation').value);
+    formData.append("bio", document.getElementById('bio').value);
     let request = new XMLHttpRequest();
     request.onload = () => {
         if (request.readyState == 4 && request.status == 200) {
+            console.log(request.responseText);
             if (request.responseText == 'ok')
-            document.getElementById('main_div').innerHTML = '<center>Votre compte est creer<br/>Vous pouvez maintenant vous connecter</center>';
+            document.getElementById('main_div').innerHTML = '<center>Formulaire enregistrer</center>';
         }
     }
-    request.open("POST", "/register");
+    request.open("POST", "/form");
     request.send(formData);
 }
 
@@ -42,7 +60,7 @@ function add_tag() {
     let err_mes = document.getElementById('add_tag_err_mes');
     let my_tag = document.getElementById('my_tag');
     let my_tag_dis = document.getElementById('my_tag_dis');
-    let regex = /^#([a-z0-9]{1,20})$/;
+    let regex = /^#([a-zA-Z0-9]{1,20})$/;
 
     if (regex.test(tag.value)) {
         let formData = new FormData();
@@ -58,7 +76,7 @@ function add_tag() {
                         my_tag_dis.removeAttribute('disabled');
                     }
                     let option = document.createElement("option");
-                    option.text = tag.value;
+                    option.text = tag.value.toLowerCase();
                     my_tag.add(option);
                 }
                 else {
@@ -108,6 +126,7 @@ function del_tag() {
 function picture() {
     let formData = new FormData();
     formData.append("test", document.getElementById('picture').files[0]);
+    formData.append("picture", 'profil');
 
     let request = new XMLHttpRequest();
     request.onload = () => {
