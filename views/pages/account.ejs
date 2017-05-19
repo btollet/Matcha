@@ -70,6 +70,49 @@
                     </div><br/>
                 </div>
                 <div class="col-sm-9">
+                    <% if(login == user.login) { %>
+                        <div id='div_priv' class="card" hidden>
+                            <div class="card-header">
+                                Information privee (visible seulement par vous)
+                            </div>
+                            <div class="card-block">
+                                <blockquote class="card-blockquote">
+                                    <div class="form-group row">
+                                        <label class="col-sm-2 col-form-label">Adresse mail</label>
+                                        <div class="col-sm-10">
+                                            <p class="form-control-static"><%= user.mail %></p>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div id="div_old_pass" class="form-group">
+                                        <label >Mot de passe actuel</label>
+                                        <input type="password" class="form-control" id="old_pass" placeholder="Mot de passe actuel">
+                                        <div id="old_pass_err" class="form-control-feedback" hidden="hidden">Mauvais mot de passe</div>
+                                    </div>
+                                    <div id="div_pass" class="form-group">
+                                        <label >Nouveau mot de passe</label>
+                                        <input type="password" class="form-control" id="pass" placeholder="Nouveau mot de passe">
+                                        <div id="pass_err" class="form-control-feedback" hidden="hidden">Mot de passe trop simple</div>
+                                        <small id="pass_err_mes" class="form-text text-muted" hidden="hidden">Votre mot de passe doit contenir au moins:<br/>
+                                            - 1 lettre minuscule<br/>
+                                            - 1 lettre majuscule<br/>
+                                            - 1 chiffre<br/>
+                                            - 8 caracteres<br/>
+                                            - Pas de caractere special</small>
+                                        <script>document.getElementById('pass').addEventListener('change', pass_check);</script>
+                                    </div>
+                                    <div id="div_pass_confirm" class="form-group">
+                                        <label>Nouveau mot de passe (confirmation)</label>
+                                        <input type="password" class="form-control" id="pass_confirm" placeholder="Nouveau mot de passe">
+                                        <div id="pass_confirm_err" class="form-control-feedback" hidden="hidden">Les deux mots sont differents</div>
+                                        <small id="pass_confirm_err_mes" class="form-text text-muted" hidden="hidden">Entrez le meme mot de passe</small>
+                                        <script>document.getElementById('pass_confirm').addEventListener('change', pass_confirm_check);</script>
+                                    </div>
+                                    <button type="button" class="btn btn-primary">Modifier mot de passe</button>
+                                </blockquote>
+                            </div>
+                        </div><div id='br' hidden><br/></div>
+                    <% } %>
                     <div class="card">
                         <div class="card-header">
                             Biographie
@@ -92,7 +135,8 @@
                     </div><br/>
                 </div>
             </div>
-            <center><% if(login == user.login) { %><button id="main_button" type="button" class="btn btn-secondary" onclick="modif()">Modifier mes informations</button><% } %><br/><small id='main_small' class="form-text text-muted"></small></center>
+            <center><% if(login == user.login) { %><button id="main_button" type="button" class="btn btn-secondary" onclick="modif()">Modifier mes informations</button><% } %><br/>
+                <small id='main_small' class="form-text text-muted"></small></center>
         </div>
     </div>
 

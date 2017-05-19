@@ -41,8 +41,10 @@ async function account(name, bdd, res, sess, user) {
     let tag = await bdd.collection('tag').find({ login: user }).toArray();
     let picture = await bdd.collection('picture').find({ login: user }).toArray();
     let json_user = null;
-    if (info.login === sess.login) { console.log('Ok');
-    json_user = JSON.stringify(info); }
+    if (info.login === sess.login)
+    json_user = JSON.stringify(info);
+    else
+    info.mail = null;
 
     res.render('pages/' + name, {
         page: name,

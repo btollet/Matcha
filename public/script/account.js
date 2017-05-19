@@ -16,6 +16,7 @@ function modif() {
     //- Biographie
     document.getElementById('div_bio').innerHTML = div_bio();
     bio_count();
+    document.getElementById('bio_div').setAttribute('class', 'form-group');
     document.getElementById('bio').onkeyup = bio_count;
     //- Photo profil
     document.getElementById('div_pic').innerHTML = div_pic();
@@ -26,15 +27,24 @@ function modif() {
     document.getElementById('div_info').innerHTML = div_info();
     document.getElementById('f_name').addEventListener('change', f_name_check);
     document.getElementById('name').addEventListener('change', name_check);
+    //- Information privee
+    document.getElementById('div_priv').removeAttribute('hidden');
+    document.getElementById('br').removeAttribute('hidden');
     //- Boutton fin de page
     document.getElementById('main_button').innerHTML = 'Tout enregistrer';
     document.getElementById('main_button').setAttribute('onclick', 'save_all()');
-    document.getElementById('main_small').innerHTML = 'Les images et tags sont enregistrer automatiquement'
+    document.getElementById('main_small').innerHTML = "Les images et tags sont enregistrer automatiquement<br/>Ne prend pas en compte le changement de mot de passe";
 }
 
 function save_all() {
-    save_bio();
-    window.location.replace('/account');
+    let valid = true;
+    if (!save_info()) {console.log('Info');
+        valid = false;}
+    if (!save_bio()) {console.log('Bio');
+        valid = false;}
+    console.log(valid);
+    if (valid)
+        window.location.replace('/account');
 }
 
 function save_bio() {
@@ -45,14 +55,45 @@ function save_bio() {
     let request = new XMLHttpRequest();
     request.onload = () => {
         if (request.readyState == 4 && request.status == 200) {
-            if (request.responseText == 'ok')
+            if (request.responseText == 'ok') {
                 document.getElementById('bio_ok').removeAttribute('hidden');
+                return (true);
+            }
+            else
+            return (false);
         }
     }
     if (bio_count()) {
         request.open("POST", "/save_bio");
         request.send(formData);
     }
+    else
+    return (false);
+}
+
+function save_info() {
+    let formData = new FormData();
+    formData.append("f_name", document.getElementById('f_name').value);
+    formData.append("name", document.getElementById('name').value);
+    formData.append("gender", document.getElementById('gender').value);
+    formData.append("age", document.getElementById('age').value);
+    formData.append("orientation", document.getElementById('orientation').value);
+    let request = new XMLHttpRequest();
+    request.onload = () => {
+        if (request.readyState == 4 && request.status == 200) {
+            document.getElementById('info_ok').removeAttribute('hidden');
+            if (request.responseText == 'ok') {
+                document.getElementById('info_ok').innerHTML = 'Enregistrer<hr>';
+                return (true);
+            }
+            else {
+                document.getElementById('info_ok').innerHTML = 'Erreur verifier vos entrez<hr>';
+                return (false);
+            }
+        }
+    }
+    request.open("POST", "/save_info");
+    request.send(formData);
 }
 
 function bio_count () {
@@ -211,14 +252,42 @@ function name_check () {
     }
 }
 
+function pass_check() {
+    let pass = document.getElementById('pass');
+    let pass_confirm = document.getElementById('pass_confirm');
+    let div = document.getElementById('div_pass');
+    let error = document.getElementById('pass_err');
+    let error_mes = document.getElementById('pass_err_mes');
+    let regex = (/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/);
+
+    if (regex.test(pass.value))
+    sucess(pass, div, error, error_mes);
+    else
+    danger(pass, div, error, error_mes);
+    pass_confirm_check();
+}
+
+function pass_confirm_check() {
+    let pass = document.getElementById('pass');
+    let pass_confirm = document.getElementById('pass_confirm');
+    let div = document.getElementById('div_pass_confirm');
+    let error = document.getElementById('pass_confirm_err');
+    let error_mes = document.getElementById('pass_confirm_err_mes');
+
+    if (pass.value == pass_confirm.value)
+    sucess(pass_confirm, div, error, error_mes);
+    else
+    danger(pass_confirm, div, error, error_mes);
+}
+
 //--- HTML
 function div_bio() {
     let div = '<div id="bio_div" class="form-group">';
-    let message = '<label id="bio_ok" hidden>Enregistrer</label>';
+    let message = '<label id="bio_ok" hidden>Enregistrer<hr></label>';
     let textarea = '<textarea class="form-control" id="bio" rows="3" >' + user.bio +'</textarea>';
     let counter = '<div class="row"><div class="col-10"></div><div class="col-2"><small class="form-text text-muted">Restant: <span id="bio_count">500</span></small></div></div>';
     let err = '<div id="bio_err" class="form-control-feedback" hidden="hidden">Caracteres speciaux interdit</div>';
-    let button = '<button type="button" class="btn btn-secondary" onclick="save_bio()">Enregistrer</button></div>';
+    let button = '<button type="button" class="btn btn-primary" onclick="save_bio()">Enregistrer</button></div>';
     return (div + message + textarea + counter + err + button);
 }
 
@@ -252,6 +321,7 @@ function div_tag() {
 }
 
 function div_info() {
+    let message = '<label id="info_ok" hidden>Enregistrer<hr></label>';
     let f_name = '<div id="div_f_name" class="form-group"><label>Nom</label><input type="text" class="form-control" id="f_name" value="' + user.f_name + '" placeholder="Nom" maxlength="20"><div id="f_name_err" class="form-control-feedback" hidden="hidden"></div>';
     let f_name_small = '<small id="f_name_err_mes" class="form-text text-muted" hidden="hidden"></small></div>';
     let name = '<div id="div_name" class="form-group"><label>Prenom</label><input type="text" class="form-control" id="name" value="' + user.name + '" placeholder="Prenom" maxlength="20"><div id="name_err" class="form-control-feedback" hidden="hidden"></div>';
@@ -274,6 +344,6 @@ function div_info() {
     if (user.orientation === 'Bisexuel')
     orient += 'selected="selected"';
     orient += '>Bisexuel</option></select></div>';
-    let button = '<button type="button" class="btn btn-secondary" onclick="save_info()">Enregistrer</button></div>';
-    return (f_name + f_name_small + name + name_small + sexe + age + orient + button);
+    let button = '<button type="button" class="btn btn-primary" onclick="save_info()">Enregistrer</button></div>';
+    return (message + f_name + f_name_small + name + name_small + sexe + age + orient + button);
 }

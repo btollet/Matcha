@@ -31,6 +31,23 @@ module.exports = {
         res.end('error');
     },
 
+    save_info: (form, bdd, res, sess) => {
+        if (check_name(form) && check_gender(form) && check_age(form) && check_orient(form)) {
+            bdd.collection('users').update({ login: sess.login },
+            {
+                $set: {
+                    f_name: form.f_name,
+                    name: form.name,
+                    gender: form.gender,
+                    age: form.age,
+                    orientation: form.orientation}
+            });
+            res.end('ok');
+        }
+        else
+        res.end('error');
+    },
+
     picture: (name, type, bdd, res, sess) => {
         check_picture(name, type, bdd, res, sess);
     },
@@ -43,7 +60,6 @@ module.exports = {
             first_form: 'ok' }
         });
         sess.first_form = 'ok';
-        console.log(sess);
         res.end('ok');
     }
 }
@@ -98,6 +114,15 @@ function check_bio (form) {
     let regex = /^[a-zA-Z0-9 \n\r]*$/;
 
     if (regex.test(form.bio) && form.bio.length <= 500)
+    return(true);
+    return(false);
+}
+
+function check_name(form) {
+    let regex = /^[a-zA-Z ]+$/;
+    if (!form.name || !form.f_name)
+    return(false);
+    if (regex.test(form.f_name) && regex.test(form.name))
     return(true);
     return(false);
 }

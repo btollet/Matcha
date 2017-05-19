@@ -74,6 +74,10 @@ app.post('/save_bio', upload.fields([]), (req, res) => {
     profil_js.save_bio(req.body, bdd, res, req.session);
 });
 
+app.post('/save_info', upload.fields([]), (req, res) => {
+    profil_js.save_info(req.body, bdd, res, req.session);
+})
+
 app.post('/picture', upload.single('file'), (req, res) => {
     profil_js.picture(req.file.filename, req.body.picture, bdd, res, req.session);
 });
