@@ -18,21 +18,21 @@
             <h2>Inscription</h2>
             <div id="div_f_name" class="form-group">
                 <label>Nom</label>
-                <input type="text" class="form-control" id="f_name" placeholder="Nom">
+                <input type="text" class="form-control" id="f_name" placeholder="Nom" maxlength="20">
                 <div id="f_name_err" class="form-control-feedback" hidden="hidden"></div>
                 <small id="f_name_err_mes" class="form-text text-muted" hidden="hidden"></small>
                 <script>document.getElementById('f_name').addEventListener('change', f_name_check);</script>
             </div>
             <div id="div_name" class="form-group">
                 <label>Prenom</label>
-                <input type="text" class="form-control" id="name" placeholder="Prenom">
+                <input type="text" class="form-control" id="name" placeholder="Prenom" maxlength="20">
                 <div id="name_err" class="form-control-feedback" hidden="hidden"></div>
                 <small id="name_err_mes" class="form-text text-muted" hidden="hidden"></small>
                 <script>document.getElementById('name').addEventListener('change', name_check);</script>
             </div>
             <div id="div_login" class="form-group">
                 <label>Login</label>
-                <input type="text" class="form-control" id="login" placeholder="Login">
+                <input type="text" class="form-control" id="login" placeholder="Login" maxlength="10">
                 <div id="login_err" class="form-control-feedback" hidden="hidden"></div>
                 <small id="login_err_mes" class="form-text text-muted" hidden="hidden">Votre login doit avoir entre 3 et 10 carateres.</small>
                 <script>document.getElementById('login').addEventListener('change', login_check);</script>

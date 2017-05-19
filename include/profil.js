@@ -1,5 +1,7 @@
+let fs = require('fs');
+
 module.exports = {
-    save_all: (form, bdd, res, sess) => {
+    save_first_form: (form, bdd, res, sess) => {
         if (check_gender(form) && check_age(form) && check_orient(form) && check_bio(form)) {
             bdd.collection('users').update({ login: sess.login },
             {
@@ -11,11 +13,26 @@ module.exports = {
                 first_form: 'ok'}
             });
             sess.first_form = 'ok';
-            console.log(sess);
             res.end('ok');
         }
         else
         res.end('error');
+    },
+
+    save_bio: (form, bdd, res, sess) => {
+        if (check_bio(form)) {
+            bdd.collection('users').update({ login: sess.login },
+            {
+                $set: { bio: form.bio }
+            });
+            res.end('ok');
+        }
+        else
+        res.end('error');
+    },
+
+    picture: (name, type, bdd, res, sess) => {
+        check_picture(name, type, bdd, res, sess);
     },
 
     skip: (bdd, res, sess) => {
@@ -33,7 +50,30 @@ module.exports = {
 
 
 //--- async
-
+async function check_picture (name, type, bdd, res, sess) {
+    let exist = await bdd.collection('picture').findOne({
+        login: sess.login,
+        type: type
+    });
+    if (exist) {
+        fs.unlink('public/picture/' + exist.name, (err) => {
+            if (err) throw err;
+            console.log('File delete -> ' + exist.name);
+        });
+        bdd.collection('picture').update({ login: sess.login }, {
+            $set: { name: name }
+        });
+        res.end(name);
+    }
+    else {
+        bdd.collection('picture').insertOne({
+            login: sess.login,
+            name: name,
+            type: type
+        });
+        res.end(name);
+    }
+}
 
 //--- function
 function check_gender (form) {
@@ -55,7 +95,7 @@ function check_orient (form) {
 }
 
 function check_bio (form) {
-    let regex = /^[a-zA-Z0-9 ]*$/;
+    let regex = /^[a-zA-Z0-9 \n\r]*$/;
 
     if (regex.test(form.bio) && form.bio.length <= 500)
     return(true);

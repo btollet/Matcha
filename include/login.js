@@ -7,11 +7,12 @@ module.exports = {
 }
 
 async function check_user(user, bdd, res, sess) {
-    let find = await bdd.collection('users').findOne({ login: user.login });
+    let regex = new RegExp(["^", user.login, "$"].join(""), "i");
+    let find = await bdd.collection('users').findOne({ login: regex });
     if (find) {
         let check_pass = await bcrypt.compare(user.pass, find.pass);
         if (check_pass == true) {
-            sess.login = user.login;
+            sess.login = find.login;
             sess.first_form = find.first_form;
             res.end('ok');
         }

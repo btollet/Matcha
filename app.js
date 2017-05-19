@@ -70,17 +70,16 @@ app.post('/del_tag', upload.fields([]), (req, res) => {
     tag_js.del_tag(req.body.tag, bdd, res, req.session);
 });
 
-app.post('/picture', upload.single('test'), (req, res) => {
-    bdd.collection('picture').insertOne({
-        login: req.session.login,
-        name: req.file.filename,
-        type: req.body.picture
-    });
-    res.send(req.file.filename);
+app.post('/save_bio', upload.fields([]), (req, res) => {
+    profil_js.save_bio(req.body, bdd, res, req.session);
+});
+
+app.post('/picture', upload.single('file'), (req, res) => {
+    profil_js.picture(req.file.filename, req.body.picture, bdd, res, req.session);
 });
 
 app.post('/form', upload.fields([]), (req, res) => {
-    profil_js.save_all(req.body, bdd, res, req.session);
+    profil_js.save_first_form(req.body, bdd, res, req.session);
 });
 
 app.post('/form_skip', upload.fields([]), (req, res) => {

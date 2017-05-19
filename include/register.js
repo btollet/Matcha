@@ -24,11 +24,13 @@ module.exports = {
 
 //--- async
 async function find_user(user, bdd, res) {
-    let regex = new RegExp(["^", user.login, "$"].join(""), "i");
+    let regex_user = new RegExp(["^", user.login, "$"].join(""), "i");
+    let regex_mail = new RegExp(["^", user.mail, "$"].join(""), "i");
     let count = await bdd.collection('users').find({$or: [
-        {login: regex},
-        {mail: user.mail}
+        {login: regex_user},
+        {mail: regex_mail}
     ]}).count();
+
     if (count == 0) {
         let pass = await bcrypt.hash(user.pass, 10);
         bdd.collection('users').insertOne({
@@ -54,7 +56,6 @@ async function find_user(user, bdd, res) {
 
 async function login_only(login, bdd, res) {
     let regex = new RegExp(["^", login, "$"].join(""), "i");
-    console.log('=> ' + regex);
     let count = await bdd.collection('users').find({login: regex}).count();
     if (count == 0)
     res.end('ok');
@@ -63,7 +64,8 @@ async function login_only(login, bdd, res) {
 }
 
 async function mail_only(mail, bdd, res) {
-    let count = await bdd.collection('users').find({mail: mail}).count();
+    let regex = new RegExp(["^", mail, "$"].join(""), "i");
+    let count = await bdd.collection('users').find({mail: regex}).count();
     if (count == 0)
     res.end('ok');
     else
@@ -73,7 +75,7 @@ async function mail_only(mail, bdd, res) {
 
 //--- function
 function check_pass (pass, pass_confirm) {
-    if (pass == pass_confirm)
+    if (pass === pass_confirm)
     {
         let regex = (/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/);
         if (regex.test(pass))

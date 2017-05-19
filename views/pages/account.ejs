@@ -10,78 +10,73 @@
     <header>
         <% include ../partials/header %>
     </header>
-
-    <script>
-    function connexion() {
-        let formData = new FormData();
-        formData.append('login', document.getElementById('login').value);
-        formData.append('pass', document.getElementById('pass').value);
-        let request = new XMLHttpRequest();
-        request.onload = () => {
-            if (request.readyState == 4 && request.status == 200) {
-                if (request.responseText == 'ok')
-                window.location.replace('/');
-                else {
-                    document.getElementById('err_mess').innerHTML = 'Mauvais login ou mot de passe';
-                }
-            }
-        }
-        request.open("POST", "/login");
-        request.send(formData);
-    }
-    </script>
+    <% if(login == user.login) { %>
+        <script>
+            var user = <%- json_user %>;
+            var tag = <%- json_tag %>;
+        </script>
+        <script src='script/account.js'></script>
+    <% } %>
 
     <div class="container">
         <div id="main_div" class="jumbotron">
-            <center><h3><b><u><%= user.login %></u></b></h3>
-                <% profil = null
-             pic.forEach(function(val) {
-                if (val.type == 'profil') {
-                     profil = val.name
-                }
-            }) %>
-                <img id="picture_preview" height="200px" width="200px"
-                <% if (profil) {%>
-                    src="picture/<%= profil %>"
-                <% } else { %>
-                    src="picture/default.jpg"
-                <% } %>
-                ></center>
+                <center><h3><b><u><%= user.login %></u></b> <% if(login == user.login) { %>(Vous)<% } %></h3>
+                        <% profil = null
+                        pic.forEach(function(val) {
+                            if (val.type == 'profil') {
+                                profil = val.name
+                            }
+                        }) %>
+                        <img id="picture_preview" height="200px" width="200px"
+                        <% if (profil) {%>
+                            src="picture/<%= profil %>"
+                        <% } else { %>
+                            src="picture/default.jpg"
+                        <% } %>
+                        >
+                    <div id='div_pic'></div>
+                </center>
             <br/>
             <div class="row">
                 <div class="col-sm-3">
                     <div class="card">
                         <div class="card-header">
-                            <%= login %>
+                            <%= user.login %>:
                         </div>
                         <div class="card-block">
-                            <blockquote class="card-blockquote">
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.</p>
-                                <footer>Someone famous in <cite title="Source Title">Source Title</cite></footer>
+                            <blockquote id='div_info' class="card-blockquote">
+                                <ul class="list-unstyled">
+                                    <li><%= user.f_name %> <%= user.name %></li>
+                                    <li><%= user.gender %></li>
+                                    <li><% if (user.age) { %><%= user.age %> ans<% } %></li>
+                                    <li><%= user.orientation %></li>
+                                </ul>
                             </blockquote>
                         </div>
                     </div><br/>
                     <div class="card">
                         <div class="card-header">
-                            Tags
+                            Centre d'interet
                         </div>
                         <div class="card-block">
-                            <blockquote class="card-blockquote">
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.</p>
-                                <footer>Someone famous in <cite title="Source Title">Source Title</cite></footer>
+                            <blockquote id='div_tag' class="card-blockquote">
+                                <ul class="list-unstyled">
+                                    <% tag.forEach(function(val) { %>
+                                        <li><%= val.tag %></li>
+                                    <% }) %>
+                                </ul>
                             </blockquote>
                         </div>
-                    </div>
+                    </div><br/>
                 </div>
                 <div class="col-sm-9">
                     <div class="card">
                         <div class="card-header">
-                            Description
+                            Biographie
                         </div>
                         <div class="card-block">
-                            <blockquote class="card-blockquote">
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.</p>
-                                <footer>Someone famous in <cite title="Source Title">Source Title</cite></footer>
+                            <blockquote id='div_bio' class="card-blockquote">
+                                <%= user.bio %>
                             </blockquote>
                         </div>
                     </div><br/>
@@ -91,13 +86,13 @@
                         </div>
                         <div class="card-block">
                             <blockquote class="card-blockquote">
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.</p>
-                                <footer>Someone famous in <cite title="Source Title">Source Title</cite></footer>
+
                             </blockquote>
                         </div>
-                    </div>
+                    </div><br/>
                 </div>
             </div>
+            <center><% if(login == user.login) { %><button id="main_button" type="button" class="btn btn-secondary" onclick="modif()">Modifier mes informations</button><% } %><br/><small id='main_small' class="form-text text-muted"></small></center>
         </div>
     </div>
 

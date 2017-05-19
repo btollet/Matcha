@@ -23,6 +23,7 @@
     "multer": "",
     "nodemon": "",
     "bcrypt": "",
-    "express-session": ""
+    "express-session": "",
+    "fs": ""
   }
 }

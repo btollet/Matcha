@@ -17,7 +17,7 @@ function bio_count () {
     let div = document.getElementById('bio_div');
     let bio = document.getElementById('bio');
     let bio_err = document.getElementById('bio_err');
-    let regex = /^[a-zA-Z0-9 ]*$/;
+    let regex = /^[a-zA-Z0-9 \n\r]*$/;
 
     count.innerHTML = 500 - bio.value.length;
     if (regex.test(bio.value)) {
@@ -136,7 +136,7 @@ function del_tag() {
 
 function picture() {
     let formData = new FormData();
-    formData.append("test", document.getElementById('picture').files[0]);
+    formData.append("file", document.getElementById('picture').files[0]);
     formData.append("picture", 'profil');
 
     let request = new XMLHttpRequest();
