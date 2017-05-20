@@ -77,17 +77,26 @@
                             </div>
                             <div class="card-block">
                                 <blockquote class="card-blockquote">
-                                    <div class="form-group row">
+                                    <label id="mail_ok" hidden>Enregistrer<hr></label>
+                                    <div id ='div_mail' class="form-group row">
                                         <label class="col-sm-2 col-form-label">Adresse mail</label>
                                         <div class="col-sm-10">
-                                            <p class="form-control-static"><%= user.mail %></p>
+                                            <input type="email" class="form-control" id="mail" placeholder="Mail" value="<%= user.mail %>">
                                         </div>
                                     </div>
+                                    <div class="form-group">
+                                        <div id="mail_err" class="form-control-feedback" hidden="hidden"></div>
+                                        <small id="mail_err_mes" class="form-text text-muted" hidden="hidden"></small>
+                                        <script>document.getElementById('mail').addEventListener('change', mail_check);</script>
+                                        <button type="button" class="btn btn-primary" onclick="save_mail()">Modifier adresse mail</button>
+                                    </div>
                                     <hr>
+                                    <label id="pass_ok" hidden>Enregistrer<hr></label>
                                     <div id="div_old_pass" class="form-group">
                                         <label >Mot de passe actuel</label>
                                         <input type="password" class="form-control" id="old_pass" placeholder="Mot de passe actuel">
                                         <div id="old_pass_err" class="form-control-feedback" hidden="hidden">Mauvais mot de passe</div>
+                                        <script>document.getElementById('old_pass').addEventListener('change', reset_pass);</script>
                                     </div>
                                     <div id="div_pass" class="form-group">
                                         <label >Nouveau mot de passe</label>
@@ -108,7 +117,7 @@
                                         <small id="pass_confirm_err_mes" class="form-text text-muted" hidden="hidden">Entrez le meme mot de passe</small>
                                         <script>document.getElementById('pass_confirm').addEventListener('change', pass_confirm_check);</script>
                                     </div>
-                                    <button type="button" class="btn btn-primary">Modifier mot de passe</button>
+                                    <button type="button" class="btn btn-primary" onclick="save_pass()">Modifier mot de passe</button>
                                 </blockquote>
                             </div>
                         </div><div id='br' hidden><br/></div>

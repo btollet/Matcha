@@ -1,4 +1,5 @@
 let fs = require('fs');
+let bcrypt = require('bcrypt');
 
 module.exports = {
     save_first_form: (form, bdd, res, sess) => {
@@ -48,6 +49,20 @@ module.exports = {
         res.end('error');
     },
 
+    save_mail: (form, bdd, res, sess) => {
+        if (check_mail(form))
+            check_mail_part2(form, bdd, res, sess);
+        else
+        res.end('error');
+    },
+
+    save_pass: (form, bdd, res, sess) => {
+        if (check_pass(form))
+            check_pass_part2(form, bdd, res, sess);
+        else
+        res.end('error1');
+    },
+
     picture: (name, type, bdd, res, sess) => {
         check_picture(name, type, bdd, res, sess);
     },
@@ -91,6 +106,41 @@ async function check_picture (name, type, bdd, res, sess) {
     }
 }
 
+async function check_mail_part2(form, bdd, res, sess) {
+    let regex_mail = new RegExp(["^", form.mail, "$"].join(""), "i");
+    let count = await bdd.collection('users').find({$or: [
+        {mail: regex_mail}
+    ]}).count();
+
+    if (count == 0) {
+        bdd.collection('users').update({ 'login': sess.login }, {
+            $set: { 'mail': form.mail }
+        });
+        res.end('ok');
+    }
+    else
+    res.end('error');
+}
+
+async function check_pass_part2(form, bdd, res, sess) {
+    let find = await bdd.collection('users').findOne({ login: sess.login });
+    if (find) {
+        let check_pass = await bcrypt.compare(form.old, find.pass);
+        if (check_pass == true) {
+            let new_pass = await bcrypt.hash(form.pass, 10);
+            bdd.collection('users').update({ 'login': sess.login }, {
+                $set: { 'pass': new_pass }
+            });
+            res.end('ok');
+        }
+        else
+        res.end('error');
+    }
+    else
+        res.end('error');
+}
+
+
 //--- function
 function check_gender (form) {
     if (form.gender === '♂ Homme' || form.gender === '♀ Femme')
@@ -125,4 +175,22 @@ function check_name(form) {
     if (regex.test(form.f_name) && regex.test(form.name))
     return(true);
     return(false);
+}
+
+function check_mail (form) {
+    let regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    if (regex.test(form.mail))
+    return(true);
+    return(false);
+}
+
+function check_pass (form) {
+    if (form.pass === form.pass_confirm)
+    {
+        let regex = (/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/);
+        if (regex.test(form.pass))
+        return (true);
+        return (false);
+    }
+    return (false);
 }

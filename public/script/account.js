@@ -31,20 +31,9 @@ function modif() {
     document.getElementById('div_priv').removeAttribute('hidden');
     document.getElementById('br').removeAttribute('hidden');
     //- Boutton fin de page
-    document.getElementById('main_button').innerHTML = 'Tout enregistrer';
-    document.getElementById('main_button').setAttribute('onclick', 'save_all()');
-    document.getElementById('main_small').innerHTML = "Les images et tags sont enregistrer automatiquement<br/>Ne prend pas en compte le changement de mot de passe";
-}
-
-function save_all() {
-    let valid = true;
-    if (!save_info()) {console.log('Info');
-        valid = false;}
-    if (!save_bio()) {console.log('Bio');
-        valid = false;}
-    console.log(valid);
-    if (valid)
-        window.location.replace('/account');
+    document.getElementById('main_button').innerHTML = 'Voir mon profil';
+    document.getElementById('main_button').setAttribute('onclick', 'window.location.replace("/account");');
+    document.getElementById('main_small').innerHTML = "Enregistrer vos changements avant !";
 }
 
 function save_bio() {
@@ -55,20 +44,64 @@ function save_bio() {
     let request = new XMLHttpRequest();
     request.onload = () => {
         if (request.readyState == 4 && request.status == 200) {
-            if (request.responseText == 'ok') {
-                document.getElementById('bio_ok').removeAttribute('hidden');
-                return (true);
-            }
-            else
-            return (false);
+            if (request.responseText == 'ok')
+            document.getElementById('bio_ok').removeAttribute('hidden');
         }
     }
     if (bio_count()) {
         request.open("POST", "/save_bio");
         request.send(formData);
     }
-    else
-    return (false);
+}
+
+function save_pass() {
+    pass_check();
+    pass_confirm_check();
+
+    let old = document.getElementById('old_pass');
+    let pass = document.getElementById('pass');
+    let pass_confirm = document.getElementById('pass_confirm');
+    let formData = new FormData();
+    formData.append("old", old.value);
+    formData.append("pass", pass.value);
+    formData.append("pass_confirm", pass_confirm.value);
+
+    let request = new XMLHttpRequest();
+    request.onload = () => {
+        if (request.readyState == 4 && request.status == 200) {
+            if (request.responseText == 'ok') {
+                document.getElementById('pass_ok').removeAttribute('hidden');
+                old.value = '';
+                pass.value = '';
+                pass_confirm.value = '';
+            }
+            else if (request.responseText == 'error') {
+                document.getElementById('div_old_pass').setAttribute('class', 'form-group has-danger');
+                document.getElementById('old_pass_err').removeAttribute('hidden');
+                document.getElementById('pass_ok').setAttribute('hidden', 'hidden');
+            }
+        }
+    }
+    request.open("POST", "/save_pass");
+    request.send(formData);
+}
+
+function save_mail() {
+    mail_check();
+
+    let mail = document.getElementById('mail');
+    let formData = new FormData();
+    formData.append("mail", mail.value);
+
+    let request = new XMLHttpRequest();
+    request.onload = () => {
+        if (request.readyState == 4 && request.status == 200) {
+            if (request.responseText == 'ok')
+            document.getElementById('mail_ok').removeAttribute('hidden');
+        }
+    }
+    request.open("POST", "/save_mail");
+    request.send(formData);
 }
 
 function save_info() {
@@ -82,14 +115,10 @@ function save_info() {
     request.onload = () => {
         if (request.readyState == 4 && request.status == 200) {
             document.getElementById('info_ok').removeAttribute('hidden');
-            if (request.responseText == 'ok') {
-                document.getElementById('info_ok').innerHTML = 'Enregistrer<hr>';
-                return (true);
-            }
-            else {
-                document.getElementById('info_ok').innerHTML = 'Erreur verifier vos entrez<hr>';
-                return (false);
-            }
+            if (request.responseText == 'ok')
+            document.getElementById('info_ok').innerHTML = 'Enregistrer<hr>';
+            else
+            document.getElementById('info_ok').innerHTML = 'Erreur verifier vos entrez<hr>';
         }
     }
     request.open("POST", "/save_info");
@@ -204,6 +233,12 @@ function del_tag() {
     }
 }
 
+function reset_pass() {
+    document.getElementById('div_old_pass').setAttribute('class', 'form-group');
+    document.getElementById('old_pass_err').setAttribute('hidden', 'hidden');
+    document.getElementById('pass_ok').setAttribute('hidden', 'hidden');
+}
+
 function f_name_check () {
     let f_name = document.getElementById('f_name');
     let div = document.getElementById('div_f_name');
@@ -250,6 +285,43 @@ function name_check () {
             danger(name, div, error, error_mes);
         }
     }
+}
+
+function mail_check() {
+    let mail = document.getElementById('mail');
+    let div = document.getElementById('div_mail');
+    let error = document.getElementById('mail_err');
+    let error_mes = document.getElementById('mail_err_mes');
+    let regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    let formData = new FormData();
+    formData.append("mail", mail.value);
+
+    document.getElementById('mail_ok').setAttribute('hidden', 'hidden');
+    let request = new XMLHttpRequest();
+    request.onload = () => {
+        if (request.readyState == 4 && request.status == 200) {
+            let exist = (request.responseText);
+            if (regex.test(mail.value) && exist == 'ok') {
+                sucess(mail, div, error, error_mes);
+                div.setAttribute('class', 'form-group row has-success');
+            }
+            else
+            {
+                danger(mail, div, error, error_mes);
+                div.setAttribute('class', 'form-group row has-danger');
+                if (exist == 'exist') {
+                    error.innerHTML = 'Adresse mail deja utilise';
+                    error_mes.innerHTML = 'Prenez une adresse mail non associer a un compte deja existant'
+                }
+                else {
+                    error.innerHTML = 'Adresse mail non valide';
+                    error_mes.innerHTML = 'Verifez votre adresse mail';
+                }
+            }
+        }
+    }
+    request.open("POST", "/mail_check");
+    request.send(formData);
 }
 
 function pass_check() {
