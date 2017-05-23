@@ -1,12 +1,12 @@
 function sucess(form, div, err, err_mes) {
-    form.setAttribute('class', 'form-control form-control-success mb-2 mr-sm-2 mb-sm-0');
+    form.setAttribute('class', 'form-control form-control-success');
     div.setAttribute('class', 'form-group has-success');
     err.setAttribute('hidden', 'hidden');
     err_mes.setAttribute('hidden', 'hidden');
 }
 
 function danger(form, div, err, err_mes) {
-    form.setAttribute('class', 'form-control form-control-danger mb-2 mr-sm-2 mb-sm-0');
+    form.setAttribute('class', 'form-control form-control-danger');
     div.setAttribute('class', 'form-group has-danger');
     err.removeAttribute('hidden');
     err_mes.removeAttribute('hidden');
@@ -22,9 +22,11 @@ function modif() {
     document.getElementById('div_pic').innerHTML = div_pic();
     document.getElementById('picture').addEventListener('change', picture);
     //- Tag
-    document.getElementById('div_tag').innerHTML = div_tag();
+    document.getElementById('div_tag_mod').removeAttribute('hidden');
+    document.getElementById('div_tag').setAttribute('hidden', 'hidden');
     //- Information
-    document.getElementById('div_info').innerHTML = div_info();
+    document.getElementById('div_info_mod').removeAttribute('hidden');
+    document.getElementById('div_info').setAttribute('hidden', 'hidden');
     document.getElementById('f_name').addEventListener('change', f_name_check);
     document.getElementById('name').addEventListener('change', name_check);
     //- Information privee
@@ -190,7 +192,7 @@ function add_tag() {
                     my_tag.add(option);
                 }
                 else {
-                    tag.setAttribute('class', 'form-control form-control-danger mb-2 mr-sm-2 mb-sm-0');
+                    tag.setAttribute('class', 'form-control form-control-danger');
                     div.setAttribute('class', 'form-group has-danger');
                     err.removeAttribute('hidden');
                     err.innerHTML = 'Vous utilisez deja ce tag';
@@ -366,56 +368,4 @@ function div_bio() {
 function div_pic () {
     let button = '<input type="file" class="form-control-file" id="picture" aria-describedby="fileHelp">';
     return (button);
-}
-
-function div_tag() {
-    let add_div = '<div id="add_tag_div" class="form-group"><div class="form-inline">';
-    let add_input = '<input type="text" class="form-control mb-2 mr-sm-2 mb-sm-0" id="add_tag" placeholder="#bg" maxlength="21">';
-    let add_submit = '<button type="submit" class="btn btn-primary mb-2 mr-sm-2 mb-sm-0" onclick="add_tag()">Ajouter</button></div>';
-    let small = '<small class="form-text text-muted">Tag sans espace(ex: #bio, #geek, #piercing)</small>';
-    let err = '<div id="add_tag_err" class="form-control-feedback" hidden="hidden">Erreur dans le tag</div>';
-    let err_mes = '<small id="add_tag_err_mes" class="form-text text-muted" hidden="hidden">Votre tag doit:<br/>- Commencer pas un #<br/>- Contenir uniquement des lettres et chiffres<br/>- Posseder entre 1 et 20 caracteres (# non compris)</small>';
-    let rem_div = '</div><hr><div class="form-group"><div class="form-inline">';
-    let fieldset = '<fieldset id="my_tag_dis"';
-    if (!tag[0])
-    fieldset += ' disabled';
-    let select = '><select class="form-control mb-2 mr-sm-2 mb-sm-0" id="my_tag">'
-    let option;
-    if (!tag[0])
-    option = "<option>Aucun centre d'interet</option>";
-    else {
-        tag.forEach((val) => {
-            option += '<option>' + val.tag + '</option>';
-        });
-    }
-    let rem_submit = '</select></fieldset><button type="submit" class="btn btn-primary" onclick="del_tag()">Retirer</button></div></div>';
-    return (add_div + add_input + add_submit + small + err + err_mes + rem_div + fieldset + select + option + rem_submit);
-}
-
-function div_info() {
-    let message = '<label id="info_ok" hidden>Enregistrer<hr></label>';
-    let f_name = '<div id="div_f_name" class="form-group"><label>Nom</label><input type="text" class="form-control" id="f_name" value="' + user.f_name + '" placeholder="Nom" maxlength="20"><div id="f_name_err" class="form-control-feedback" hidden="hidden"></div>';
-    let f_name_small = '<small id="f_name_err_mes" class="form-text text-muted" hidden="hidden"></small></div>';
-    let name = '<div id="div_name" class="form-group"><label>Prenom</label><input type="text" class="form-control" id="name" value="' + user.name + '" placeholder="Prenom" maxlength="20"><div id="name_err" class="form-control-feedback" hidden="hidden"></div>';
-    let name_small = '<small id="name_err_mes" class="form-text text-muted" hidden="hidden"></small></div>';
-    let sexe = '<div class="form-group"><label>Sexe</label><select class="form-control" id="gender"><option ';
-    if (user.gender === '♂ Homme')
-    sexe += 'selected="selected"';
-    sexe += '>♂ Homme</option><option ';
-    if (user.gender === '♀ Femme')
-    sexe += 'selected="selected"';
-    sexe += '>♀ Femme</option></select></div>';
-    let age = '<div class="form-group"><label>Age</label><input class="form-control" type="number" value="' + user.age + '" min="16" max="120" id="age"></div>';
-    let orient = '<div class="form-group"><label>Orientation</label><select class="form-control" id="orientation"><option ';
-    if (user.orientation === 'Heterosexuel')
-    orient += 'selected="selected"';
-    orient += '>Heterosexuel</option><option ';
-    if (user.orientation === 'Gay / Lesbienne')
-    orient += 'selected="selected"';
-    orient += '>Gay / Lesbienne</option><option ';
-    if (user.orientation === 'Bisexuel')
-    orient += 'selected="selected"';
-    orient += '>Bisexuel</option></select></div>';
-    let button = '<button type="button" class="btn btn-primary" onclick="save_info()">Enregistrer</button></div>';
-    return (message + f_name + f_name_small + name + name_small + sexe + age + orient + button);
 }

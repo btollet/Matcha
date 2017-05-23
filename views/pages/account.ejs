@@ -52,6 +52,43 @@
                                     <li><%= user.orientation %></li>
                                 </ul>
                             </blockquote>
+                            <% if(login == user.login) { %>
+                                <blockquote id='div_info_mod' class="card-blockquote" hidden>
+                                    <label id="info_ok" hidden>Enregistrer<hr></label>
+                                    <div id="div_f_name" class="form-group">
+                                        <label>Nom</label>
+                                        <input type="text" class="form-control" id="f_name" value="<%= user.f_name %>" placeholder="Nom" maxlength="20">
+                                        <div id="f_name_err" class="form-control-feedback" hidden="hidden"></div>
+                                        <small id="f_name_err_mes" class="form-text text-muted" hidden="hidden"></small>
+                                    </div>
+                                    <div id="div_name" class="form-group">
+                                        <label>Prenom</label>
+                                        <input type="text" class="form-control" id="name" value="<%= user.name %>" placeholder="Prenom" maxlength="20">
+                                        <div id="name_err" class="form-control-feedback" hidden="hidden"></div>
+                                        <small id="name_err_mes" class="form-text text-muted" hidden="hidden"></small>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Sexe</label>
+                                        <select class="form-control" id="gender">
+                                            <option <% if (user.gender === '♂ Homme') { %>selected="selected"<% } %> >♂ Homme</option>
+                                            <option <% if (user.gender === '♀ Femme') { %>selected="selected"<% } %> >♀ Femme</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Age</label>
+                                        <input class="form-control" type="number" value="<%= user.age %>" min="16" max="120" id="age">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Orientation</label>
+                                        <select class="form-control" id="orientation">
+                                            <option <% if (user.orientation === 'Heterosexuel') { %>selected="selected"<% } %> >Heterosexuel</option>
+                                            <option <% if (user.orientation === 'Gay / Lesbienne') { %>selected="selected"<% } %> >Gay / Lesbienne</option>
+                                            <option <% if (user.orientation === 'Bisexuel') { %>selected="selected"<% } %> >Bisexuel</option>
+                                        </select>
+                                    </div>
+                                    <button type="button" class="btn btn-primary" onclick="save_info()">Enregistrer</button>
+                                </blockquote>
+                            <% } %>
                         </div>
                     </div><br/>
                     <div class="card">
@@ -66,6 +103,31 @@
                                     <% }) %>
                                 </ul>
                             </blockquote>
+                            <% if (login == user.login) { %>
+                                <blockquote id='div_tag_mod' class="card-blockquote" hidden>
+                                    <div id="add_tag_div" class="form-group">
+                                        <input type="text" class="form-control" id="add_tag" placeholder="#bg" maxlength="21">
+                                        <button type="submit" class="btn btn-primary" onclick="add_tag()">Ajouter</button>
+                                        <small class="form-text text-muted">Tag sans espace(ex: #bio, #geek, #piercing)</small>
+                                        <div id="add_tag_err" class="form-control-feedback" hidden="hidden">Erreur dans le tag</div>
+                                        <small id="add_tag_err_mes" class="form-text text-muted" hidden="hidden">Votre tag doit:<br/>- Commencer pas un #<br/>- Contenir uniquement des lettres et chiffres<br/>
+                                            - Posseder entre 1 et 20 caracteres (# non compris)</small>
+                                    </div><hr>
+                                    <div class="form-group">
+                                        <fieldset id="my_tag_dis" <% if (!tag[0]) { %>disabled<% } %> >
+                                             <select class="form-control" id="my_tag">
+                                                 <% if (!tag[0]) { %><option>Aucun centre d'interet</option><% }
+                                                 else {
+                                                     tag.forEach((val) => {
+                                                         %><option><%= val.tag %></option><%
+                                                     })
+                                                 } %>
+                                            </select>
+                                        </fieldset>
+                                        <button type="submit" class="btn btn-primary" onclick="del_tag()">Retirer</button>
+                                    </div>
+                                </blockquote>
+                            <% } %>
                         </div>
                     </div><br/>
                 </div>
