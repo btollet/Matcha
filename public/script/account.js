@@ -14,13 +14,18 @@ function danger(form, div, err, err_mes) {
 
 function modif() {
     //- Biographie
-    document.getElementById('div_bio').innerHTML = div_bio();
+    document.getElementById('div_bio_mod').removeAttribute('hidden');
+    document.getElementById('div_bio').setAttribute('hidden', 'hidden');
     bio_count();
-    document.getElementById('bio_div').setAttribute('class', 'form-group');
     document.getElementById('bio').onkeyup = bio_count;
     //- Photo profil
-    document.getElementById('div_pic').innerHTML = div_pic();
-    document.getElementById('picture').addEventListener('change', picture);
+    let pic = document.getElementsByClassName('div_pic_mod');
+    for(i = 0; i < pic.length; i++) {
+        pic[i].removeAttribute('hidden');
+    }
+    document.getElementById('picture').addEventListener('change', () => {picture('picture', 'profil')});
+    //- Photo autre
+    document.getElementById('picture2').addEventListener('change', () => {picture('picture2', 'normal')});
     //- Tag
     document.getElementById('div_tag_mod').removeAttribute('hidden');
     document.getElementById('div_tag').setAttribute('hidden', 'hidden');
@@ -148,20 +153,42 @@ function bio_count () {
     }
 }
 
-function picture() {
+function picture(id, type) {
+    console.log('ok')
     let formData = new FormData();
-    formData.append("file", document.getElementById('picture').files[0]);
-    formData.append("picture", 'profil');
+    formData.append("file", document.getElementById(id).files[0]);
+    formData.append("picture", type);
 
     let request = new XMLHttpRequest();
     request.onload = () => {
         if (request.readyState == 4 && request.status == 200) {
-            if (request.responseText) {
+            if (request.responseText && request.responseText != 'error') {
                 document.getElementById('picture_preview').setAttribute('src', 'picture/' + request.responseText )
             }
         }
     }
     request.open("POST", "/picture");
+    request.send(formData);
+}
+
+function del_pic(name, num) {
+    console.log('pic' + (parseInt(num) + 1));
+    let formData = new FormData();
+    formData.append("name", name);
+    let request = new XMLHttpRequest();
+    request.onload = () => {
+        if (request.readyState == 4 && request.status == 200) {
+            if (request.responseText && request.responseText != 'error') {
+                document.getElementById('pic' + num).setAttribute('src', '');
+                while (num < 4) {
+                    let save = document.getElementById('pic' + (parseInt(num) + 1)).getAttribute('src');
+                    document.getElementById('pic' + num).setAttribute('src', save);
+                    num++;
+                }
+            }
+        }
+    }
+    request.open("POST", "/del_picture");
     request.send(formData);
 }
 
@@ -352,20 +379,4 @@ function pass_confirm_check() {
     sucess(pass_confirm, div, error, error_mes);
     else
     danger(pass_confirm, div, error, error_mes);
-}
-
-//--- HTML
-function div_bio() {
-    let div = '<div id="bio_div" class="form-group">';
-    let message = '<label id="bio_ok" hidden>Enregistrer<hr></label>';
-    let textarea = '<textarea class="form-control" id="bio" rows="3" >' + user.bio +'</textarea>';
-    let counter = '<div class="row"><div class="col-10"></div><div class="col-2"><small class="form-text text-muted">Restant: <span id="bio_count">500</span></small></div></div>';
-    let err = '<div id="bio_err" class="form-control-feedback" hidden="hidden">Caracteres speciaux interdit</div>';
-    let button = '<button type="button" class="btn btn-primary" onclick="save_bio()">Enregistrer</button></div>';
-    return (div + message + textarea + counter + err + button);
-}
-
-function div_pic () {
-    let button = '<input type="file" class="form-control-file" id="picture" aria-describedby="fileHelp">';
-    return (button);
 }

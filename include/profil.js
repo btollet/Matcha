@@ -64,7 +64,24 @@ module.exports = {
     },
 
     picture: (name, type, bdd, res, sess) => {
-        check_picture(name, type, bdd, res, sess);
+        if (name) {
+            if (type === 'profil')
+            check_picture(name.filename, type, bdd, res, sess);
+            else {
+                bdd.collection('picture').insertOne({
+                    login: sess.login,
+                    name: name.filename,
+                    type: type
+                });
+                res.end(name.filename);
+            }
+        }
+        else
+        res.end('error');
+    },
+
+    del_picture: (name, bdd, res, sess) => {
+        check_pic_del(name, bdd, res, sess);
     },
 
     skip: (bdd, res, sess) => {
@@ -138,6 +155,20 @@ async function check_pass_part2(form, bdd, res, sess) {
     }
     else
         res.end('error');
+}
+
+async function check_pic_del(name, bdd, res, sess) {
+    let exist = await bdd.collection('picture').findOne({ login: sess.login, name: name });
+    if (exist) {
+        bdd.collection('picture').deleteOne({ login: sess.login, name: name });
+        fs.unlink('public/picture/' + name, (err) => {
+            if (err) throw err;
+            console.log('File delete -> ' + name);
+        });
+        res.send('ok');
+    }
+    else
+    res.end('error');
 }
 
 

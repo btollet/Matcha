@@ -2,7 +2,18 @@ var express = require('express');
 var multer = require('multer');
 var MongoClient = require('mongodb').MongoClient;
 var session = require('express-session');
-var upload = multer({ dest: 'public/picture/'});
+const path = require('path');
+var upload = multer({
+    dest: 'public/picture/',
+    fileFilter: function (req, file, cb) {
+        let type = /jpg|jpeg|png|gif/;
+
+        if (type.test(path.extname(file.originalname).toLowerCase()))
+        nb_picture(cb);
+        else
+        cb(null, false);
+    }
+});
 var app = express();
 var bdd;
 
@@ -41,6 +52,7 @@ app.get('/register', (req, res) => {
 });
 
 app.get('/account', (req, res) => {
+    sess = req.session;
     page_js.call_page('account', bdd, res, req.session, req.query.login);
 });
 
@@ -88,7 +100,12 @@ app.post('/save_info', upload.fields([]), (req, res) => {
 });
 
 app.post('/picture', upload.single('file'), (req, res) => {
-    profil_js.picture(req.file.filename, req.body.picture, bdd, res, req.session);
+    sess = req.session;
+    profil_js.picture(req.file, req.body.picture, bdd, res, req.session);
+});
+
+app.post('/del_picture', upload.fields([]), (req, res) => {
+    profil_js.del_picture(req.body.name, bdd, res, req.session);
 });
 
 app.post('/form', upload.fields([]), (req, res) => {
@@ -98,6 +115,17 @@ app.post('/form', upload.fields([]), (req, res) => {
 app.post('/form_skip', upload.fields([]), (req, res) => {
     profil_js.skip(bdd, res, req.session);
 });
+
+
+//--- Async
+async function nb_picture(cb) {
+    let count = await bdd.collection('picture').find({ login: sess.login }).count();
+
+    if (count >= 5)
+        cb(null, false);
+    else
+        cb(null, true);
+}
 
 
 app.listen(3000, () => {
