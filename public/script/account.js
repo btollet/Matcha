@@ -154,7 +154,6 @@ function bio_count () {
 }
 
 function picture(id, type) {
-    console.log('ok')
     let formData = new FormData();
     formData.append("file", document.getElementById(id).files[0]);
     formData.append("picture", type);
@@ -162,8 +161,10 @@ function picture(id, type) {
     let request = new XMLHttpRequest();
     request.onload = () => {
         if (request.readyState == 4 && request.status == 200) {
-            if (request.responseText && request.responseText != 'error') {
-                document.getElementById('picture_preview').setAttribute('src', 'picture/' + request.responseText )
+            rep = request.responseText;
+            if (rep && rep != 'error') {
+                pic.push({ name: rep, type: 'normal'});
+                document.getElementById('draw_pic').innerHTML = draw_pic(false);
             }
         }
     }
@@ -172,19 +173,14 @@ function picture(id, type) {
 }
 
 function del_pic(name, num) {
-    console.log('pic' + (parseInt(num) + 1));
     let formData = new FormData();
     formData.append("name", name);
     let request = new XMLHttpRequest();
     request.onload = () => {
         if (request.readyState == 4 && request.status == 200) {
             if (request.responseText && request.responseText != 'error') {
-                document.getElementById('pic' + num).setAttribute('src', '');
-                while (num < 4) {
-                    let save = document.getElementById('pic' + (parseInt(num) + 1)).getAttribute('src');
-                    document.getElementById('pic' + num).setAttribute('src', save);
-                    num++;
-                }
+                delete pic[num];
+                document.getElementById('draw_pic').innerHTML = draw_pic(false);
             }
         }
     }

@@ -10,6 +10,28 @@
     <header>
         <% include ../partials/header %>
     </header>
+    <script>
+    let pic = <%- JSON.stringify(pic) %>
+
+    function draw_pic(hidden) {
+        let div = "<div class='row'>";
+        let count = 0;
+
+        pic.forEach((val, index) => {
+            if (val.type === 'normal') {
+                div += "<div class='col-6'><center><img id=" + index + " src='picture/" + val.name + "' style=' width: 100%; max-width: 200px;'></center><div class='div_pic_mod'";
+                if (hidden)
+                div += 'hidden';
+                div += "><center><button type='button' class='btn btn-primary' onclick='del_pic(\"" + val.name + "\", " + index + ");'>Supprimer</button></center></div></div>";
+                count ++;
+                if (count === 2)
+                div += "</div><br/><div class='row'>";
+            }
+        })
+        div += '</div>';
+        return (div);
+    }
+    </script>
     <% if(login == user.login) { %>
         <script src='script/account.js'></script>
     <% } %>
@@ -17,6 +39,12 @@
     <div class="container">
         <div id="main_div" class="jumbotron">
                 <center><h3><b><u><%= user.login %></u></b> <% if(login == user.login) { %>(Vous)<% } %></h3>
+                    <script>
+                        console.log()
+                        let user = <%- JSON.stringify(pic) %>;
+                        console.log(user);
+
+                    </script>
                         <% profil = null
                         pic.forEach(function(val) {
                             if (val.type == 'profil') {
@@ -216,22 +244,8 @@
                         </div>
                         <div class="card-block">
                             <blockquote class="card-blockquote">
-                                    <% let count = 0; %>
-                                    <div class='row'>
-                                        <% pic.forEach((val) => { %>
-                                            <% if (val.type !== "profil") {
-                                                count++;%>
-                                                    <div class='col-6'>
-                                                        <center><img id='pic<%= count %>' class="card-img-top" src='picture/<%= val.name %>' width="200px" height="200px"></center>
-                                                        <div class='div_pic_mod' hidden>
-                                                            <center><button type="button" class="btn btn-primary" onclick="del_pic('<%= val.name %>', <%= count %>);">Supprimer</button></center>
-                                                        </div>
-                                                    </div>
-                                                    <% if (count == 2)  { %></div><br/><div class='row'><% } %>
-                                            <% } %>
-                                        <% }); %>
-                                        <% while(count < 4) { %><div class='col-6'></div><% count++; } %>
-                                    </div>
+                                <div id='draw_pic'></div>
+                                <script>document.getElementById('draw_pic').innerHTML = draw_pic(true);</script>
                                 <% if (login === user.login) { %>
                                     <div class='div_pic_mod' hidden>
                                         <hr>

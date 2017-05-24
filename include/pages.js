@@ -1,3 +1,5 @@
+let wall_js = require('./wall.js');
+
 module.exports = {
     call_page: (name, bdd, res, sess, user) => { // User = pour voir profil
         if (!sess.login) {
@@ -18,7 +20,7 @@ module.exports = {
                 account(name, bdd, res, sess, sess.login);
             }
             else
-            picture_tag(name, bdd, res, sess);
+            wall_js.no_option(bdd, res, sess);
         }
     }
 }

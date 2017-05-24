@@ -3,6 +3,7 @@ var multer = require('multer');
 var MongoClient = require('mongodb').MongoClient;
 var session = require('express-session');
 const path = require('path');
+
 var upload = multer({
     dest: 'public/picture/',
     fileFilter: function (req, file, cb) {
@@ -14,6 +15,7 @@ var upload = multer({
         cb(null, false);
     }
 });
+
 var app = express();
 var bdd;
 
