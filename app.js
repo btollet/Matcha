@@ -123,7 +123,7 @@ app.post('/form_skip', upload.fields([]), (req, res) => {
 async function nb_picture(cb) {
     let count = await bdd.collection('picture').find({ login: sess.login }).count();
 
-    if (count >= 5)
+    if (count >= 6)
         cb(null, false);
     else
         cb(null, true);

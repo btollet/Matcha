@@ -163,8 +163,13 @@ function picture(id, type) {
         if (request.readyState == 4 && request.status == 200) {
             rep = request.responseText;
             if (rep && rep != 'error') {
-                pic.push({ name: rep, type: 'normal'});
-                document.getElementById('draw_pic').innerHTML = draw_pic(false);
+                if (type === 'normal') {
+                    pic.push({ name: rep, type: 'normal'});
+                    document.getElementById('draw_pic').innerHTML = draw_pic(false);
+                }
+                else {
+                    document.getElementById('picture_preview').setAttribute('src', 'picture/' + rep);
+                }
             }
         }
     }

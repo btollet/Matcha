@@ -15,10 +15,22 @@ async function find_by_tag(bdd, res, sess) {
             tag: val.tag
         }).toArray();
         await Promise.all(user_tag.map(async (user) => {
-            if (result[user.login])
-            result[user.login]++;
-            else
-            result[user.login] = 1;
+            let user_info = await bdd.collection('users').findOne({ login: user.login });
+            if (user_info) {
+                let pic = await bdd.collection('picture').findOne({ login: user.login, type: 'profil' })
+                if (pic)
+                pic = pic.name;
+                if (result[user.login])
+                    result[user.login].count++;
+                else {
+                    result[user.login] = {
+                        count: 1,
+                        f_name: user_info.f_name,
+                        name: user_info.name,
+                        pic: pic
+                    };
+                }
+            }
         }));
     }));
     let to_array = [];
@@ -27,6 +39,5 @@ async function find_by_tag(bdd, res, sess) {
     }
     await to_array.sort((a, b) => b[1] - a[1] );
     console.log(result);
-    console.log(to_array);
     res.render('pages/wall', { page: 'wall', login: sess.login, users: to_array });
 }
