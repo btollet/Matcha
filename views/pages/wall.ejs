@@ -14,9 +14,32 @@
     <div class="container">
         <div id="main_div" class="jumbotron">
             Bonjour <%= login %></br></br>
-            <%users.forEach((val) => { %>
-                <%= val[0] %>: <%= val[1] %> tags en commun</br>
-            <% }) %>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Photo</th>
+                        <th>Login</th>
+                        <th>Tag en commun</th>
+                        <th>Profil</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <%users.forEach((val) => { %>
+                        <tr>
+                            <th>
+                                <% if (val[1].pic) { %>
+                                    <img height="200px" width="200px" src='picture/<%= val[1].pic %>'>
+                                <% } else { %>
+                                    <img height="200px" width="200px" src='picture/default.jpg'>
+                                <% } %>
+                            </th>
+                            <th style="vertical-align:middle; text-align:center"><%= val[0] %></th>
+                            <th style="vertical-align:middle; text-align:center"><%= val[1].count %></th>
+                            <th style="vertical-align:middle; text-align:center"><a href='account?login=<%= val[0] %>'>Voir profil</a></th>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
         </div>
     </div>
 

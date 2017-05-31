@@ -37,7 +37,6 @@ async function find_by_tag(bdd, res, sess) {
     for (var login in result) {
         to_array.push([login, result[login]]);
     }
-    await to_array.sort((a, b) => b[1] - a[1] );
-    console.log(result);
+    await to_array.sort((a, b) => b[1].count - a[1].count);
     res.render('pages/wall', { page: 'wall', login: sess.login, users: to_array });
 }

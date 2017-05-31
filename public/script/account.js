@@ -19,12 +19,10 @@ function modif() {
     bio_count();
     document.getElementById('bio').onkeyup = bio_count;
     //- Photo profil
-    let pic = document.getElementsByClassName('div_pic_mod');
-    for(i = 0; i < pic.length; i++) {
-        pic[i].removeAttribute('hidden');
-    }
+    document.getElementById('div_pic_mod').removeAttribute('hidden');
     document.getElementById('picture').addEventListener('change', () => {picture('picture', 'profil')});
     //- Photo autre
+    document.getElementById('div_pic2').removeAttribute('hidden');
     document.getElementById('picture2').addEventListener('change', () => {picture('picture2', 'normal')});
     //- Tag
     document.getElementById('div_tag_mod').removeAttribute('hidden');
