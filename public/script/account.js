@@ -12,6 +12,16 @@ function danger(form, div, err, err_mes) {
     err_mes.removeAttribute('hidden');
 }
 
+function count_pic() {
+    let count = 0;
+
+    pic.forEach((val) => {
+        if (val.type != 'profil')
+            count++;
+    })
+    return (count)
+}
+
 function modif() {
     //- Biographie
     document.getElementById('div_bio_mod').removeAttribute('hidden');
@@ -19,10 +29,14 @@ function modif() {
     bio_count();
     document.getElementById('bio').onkeyup = bio_count;
     //- Photo profil
-    document.getElementById('div_pic_mod').removeAttribute('hidden');
+    let pic = document.getElementsByClassName('div_pic_mod');
+    for(i = 0; i < pic.length; i++) {
+        pic[i].removeAttribute('hidden');
+    }
     document.getElementById('picture').addEventListener('change', () => {picture('picture', 'profil')});
     //- Photo autre
-    document.getElementById('div_pic2').removeAttribute('hidden');
+    if (count_pic() < 4)
+        document.getElementById('div_pic2').removeAttribute('hidden');
     document.getElementById('picture2').addEventListener('change', () => {picture('picture2', 'normal')});
     //- Tag
     document.getElementById('div_tag_mod').removeAttribute('hidden');
@@ -164,6 +178,10 @@ function picture(id, type) {
                 if (type === 'normal') {
                     pic.push({ name: rep, type: 'normal'});
                     document.getElementById('draw_pic').innerHTML = draw_pic(false);
+                    if (count_pic() < 4)
+                        document.getElementById('div_pic2').removeAttribute('hidden');
+                    else
+                        document.getElementById('div_pic2').setAttribute('hidden', 'hidden');
                 }
                 else {
                     document.getElementById('picture_preview').setAttribute('src', 'picture/' + rep);
@@ -184,6 +202,10 @@ function del_pic(name, num) {
             if (request.responseText && request.responseText != 'error') {
                 delete pic[num];
                 document.getElementById('draw_pic').innerHTML = draw_pic(false);
+                if (count_pic() < 4)
+                    document.getElementById('div_pic2').removeAttribute('hidden');
+                else
+                    document.getElementById('div_pic2').setAttribute('hidden', 'hidden');
             }
         }
     }
