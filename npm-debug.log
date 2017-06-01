@@ -1,0 +1,81 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/usr/local/bin/node',
+1 verbose cli   '/usr/local/bin/npm',
+1 verbose cli   'install',
+1 verbose cli   'https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.2/socket.io.js' ]
+2 info using npm@3.10.10
+3 info using node@v6.10.3
+4 silly loadCurrentTree Starting
+5 silly install loadCurrentTree
+6 silly install readLocalPackageData
+7 silly fetchPackageMetaData https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.2/socket.io.js
+8 silly fetchOtherPackageData https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.2/socket.io.js
+9 silly cache add args [ 'https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.2/socket.io.js',
+9 silly cache add   null ]
+10 verbose cache add spec https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.2/socket.io.js
+11 silly cache add parsed spec Result {
+11 silly cache add   raw: 'https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.2/socket.io.js',
+11 silly cache add   scope: null,
+11 silly cache add   escapedName: null,
+11 silly cache add   name: null,
+11 silly cache add   rawSpec: 'https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.2/socket.io.js',
+11 silly cache add   spec: 'https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.2/socket.io.js',
+11 silly cache add   type: 'remote' }
+12 silly mapToRegistry name https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.2/socket.io.js
+13 silly mapToRegistry using default registry
+14 silly mapToRegistry registry https://registry.npmjs.org/
+15 silly mapToRegistry data Result {
+15 silly mapToRegistry   raw: 'https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.2/socket.io.js',
+15 silly mapToRegistry   scope: null,
+15 silly mapToRegistry   escapedName: null,
+15 silly mapToRegistry   name: null,
+15 silly mapToRegistry   rawSpec: 'https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.2/socket.io.js',
+15 silly mapToRegistry   spec: 'https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.2/socket.io.js',
+15 silly mapToRegistry   type: 'remote' }
+16 silly mapToRegistry uri https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.2/socket.io.js
+17 verbose addRemoteTarball https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.2/socket.io.js not in flight; adding
+18 verbose addRemoteTarball [ 'https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.2/socket.io.js',
+18 verbose addRemoteTarball   null ]
+19 info retry fetch attempt 1 at 3:43:46 PM
+20 info attempt registry request try #1 at 3:43:46 PM
+21 http fetch GET https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.2/socket.io.js
+22 verbose request id ff64c2bda77f823d
+23 http fetch 200 https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.2/socket.io.js
+24 silly fetchAndShaCheck shasum 1c5346ab9734c2044a369092e6a49882e5d0902f
+25 verbose addTmpTarball /var/folders/zz/zyxvpxvq6csfxvn_n00027g4000jvs/T/npm-69775-3d8b156c/cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.2/socket.io.js not in flight; adding
+26 verbose correctMkdir /Users/btollet/.npm correctMkdir not in flight; initializing
+27 verbose addTmpTarball validating metadata from /var/folders/zz/zyxvpxvq6csfxvn_n00027g4000jvs/T/npm-69775-3d8b156c/cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.2/socket.io.js
+28 verbose tar unpack /var/folders/zz/zyxvpxvq6csfxvn_n00027g4000jvs/T/npm-69775-3d8b156c/cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.2/socket.io.js
+29 verbose tar unpacking to /var/folders/zz/zyxvpxvq6csfxvn_n00027g4000jvs/T/npm-69775-3d8b156c/unpack-bc4899e5
+30 silly gentlyRm /var/folders/zz/zyxvpxvq6csfxvn_n00027g4000jvs/T/npm-69775-3d8b156c/unpack-bc4899e5 is being purged
+31 verbose gentlyRm don't care about contents; nuking /var/folders/zz/zyxvpxvq6csfxvn_n00027g4000jvs/T/npm-69775-3d8b156c/unpack-bc4899e5
+32 silly gunzTarPerm modes [ '755', '644' ]
+33 error not a package /var/folders/zz/zyxvpxvq6csfxvn_n00027g4000jvs/T/npm-69775-3d8b156c/cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.2/socket.io.js
+34 silly fetchPackageMetaData Error: ENOENT: no such file or directory, open '/var/folders/zz/zyxvpxvq6csfxvn_n00027g4000jvs/T/npm-69775-3d8b156c/unpack-bc4899e5/package.json'
+34 silly fetchPackageMetaData     at Error (native)
+34 silly fetchPackageMetaData  error for https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.2/socket.io.js { Error: ENOENT: no such file or directory, open '/var/folders/zz/zyxvpxvq6csfxvn_n00027g4000jvs/T/npm-69775-3d8b156c/unpack-bc4899e5/package.json'
+34 silly fetchPackageMetaData     at Error (native)
+34 silly fetchPackageMetaData   errno: -2,
+34 silly fetchPackageMetaData   code: 'ENOENT',
+34 silly fetchPackageMetaData   syscall: 'open',
+34 silly fetchPackageMetaData   path: '/var/folders/zz/zyxvpxvq6csfxvn_n00027g4000jvs/T/npm-69775-3d8b156c/unpack-bc4899e5/package.json' }
+35 silly rollbackFailedOptional Starting
+36 silly rollbackFailedOptional Finishing
+37 silly runTopLevelLifecycles Finishing
+38 silly install printInstalled
+39 verbose stack Error: ENOENT: no such file or directory, open '/var/folders/zz/zyxvpxvq6csfxvn_n00027g4000jvs/T/npm-69775-3d8b156c/unpack-bc4899e5/package.json'
+39 verbose stack     at Error (native)
+40 verbose cwd /Users/btollet/Desktop/42/Matcha
+41 error Darwin 15.6.0
+42 error argv "/usr/local/bin/node" "/usr/local/bin/npm" "install" "https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.2/socket.io.js"
+43 error node v6.10.3
+44 error npm  v3.10.10
+45 error path /var/folders/zz/zyxvpxvq6csfxvn_n00027g4000jvs/T/npm-69775-3d8b156c/unpack-bc4899e5/package.json
+46 error code ENOENT
+47 error errno -2
+48 error syscall open
+49 error enoent ENOENT: no such file or directory, open '/var/folders/zz/zyxvpxvq6csfxvn_n00027g4000jvs/T/npm-69775-3d8b156c/unpack-bc4899e5/package.json'
+50 error enoent ENOENT: no such file or directory, open '/var/folders/zz/zyxvpxvq6csfxvn_n00027g4000jvs/T/npm-69775-3d8b156c/unpack-bc4899e5/package.json'
+50 error enoent This is most likely not a problem with npm itself
+50 error enoent and is related to npm not being able to find a file.
+51 verbose exit [ -2, true ]

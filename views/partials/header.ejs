@@ -23,6 +23,10 @@
             </li>
         </ul>
     <% } else { %>
+        <script>let my_login = '<%= login %>'</script>
+        <script src="/socket.io/socket.io.js"></script>
+        <script src="/script/navbar.js"></script>
+
         <ul class="navbar-nav mr-auto">
             <% if (page == 'wall'){ %>
                 <li class="nav-item active">
@@ -40,6 +44,14 @@
             </li>
         </ul>
         <ul class="navbar-nav my-2 my-lg-0">
+            <li id='drop' class="nav-item dropdown">
+                <button id='drop_but' type="button" class="btn btn-secondary dropdown-toggle" onclick='dropdown()' data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Notification <span id='notif_num'></span>
+                </button>
+                <div id='my_notif' class="dropdown-menu">
+                    <script>check_notif()</script>
+                </div>
+            </li>
             <li class="nav-item">
                 <a class="nav-link" href="/deco">Deconnexion</a>
             </li>
