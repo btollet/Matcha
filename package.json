@@ -24,6 +24,7 @@
     "nodemon": "",
     "bcrypt": "",
     "express-session": "",
-    "fs": ""
+    "fs": "",
+    "socket.io": ""
   }
 }

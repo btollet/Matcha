@@ -31,6 +31,7 @@ let tag_js = require('./include/tag')
 let page_js = require('./include/pages')
 let profil_js = require('./include/profil')
 let notif_js = require('./include/notif')
+let like_js = require('./include/like.js')
 
 
 app.use(session({secret: 'podl5amc-daso12w' }))
@@ -134,12 +135,19 @@ app.post('/notif', (req, res) => {
     notif_js.my_notif(bdd, res, req.session)
 })
 
+app.post('/notif_see', (req, res) => {
+    notif_js.my_notif_see(bdd, res, req.session)
+})
+
+app.post('/like', upload.fields([]), (req, res) => {
+    like_js.like(req.body.name, bdd, res, req.session, notif)
+})
 
 //--- Async
 async function nb_picture(cb) {
     let count = await bdd.collection('picture').find({ login: sess.login }).count()
 
-    if (count >= 6)
+    if (count > 6)
     cb(null, false)
     else
     cb(null, true)

@@ -12,6 +12,7 @@
     </header>
     <script>
     let pic = <%- JSON.stringify(pic) %>
+    let user = <%- JSON.stringify(user) %>
 
     function draw_pic(hidden) {
         let div = "<div class='row'>";
@@ -31,6 +32,26 @@
         div += '</div>';
         return (div);
     }
+
+    function like() {
+        let like = document.getElementById('like');
+        let formData = new FormData();
+        formData.append("name", user.login);
+
+        let request = new XMLHttpRequest();
+        request.onload = () => {
+            if (request.readyState == 4 && request.status == 200) {
+                if (request.responseText === 'like') {
+                    like.setAttribute('class', 'btn btn-success')
+                }
+                else if (request.responseText === 'unlike') {
+                    like.setAttribute('class', 'btn btn-secondary')
+                }
+            }
+        }
+        request.open("POST", "/like");
+        request.send(formData);
+    }
     </script>
     <% if(login == user.login) { %>
         <script src='script/account.js'></script>
@@ -38,13 +59,12 @@
 
     <div class="container">
         <div id="main_div" class="jumbotron">
-                <center><h3><b><u><%= user.login %></u></b> <% if(login == user.login) { %>(Vous)<% } %></h3>
-                    <script>
-                        console.log()
-                        let user = <%- JSON.stringify(pic) %>;
-                        console.log(user);
-
-                    </script>
+                <center>
+                    <h3>
+                        <b><u><%= user.login %></u></b>
+                        <% if(login === user.login) { %>(Vous)<% } %>
+                        <% if(like === 'like me' || like === 'match') { %>(Vous like)<% } %>
+                    </h3>
                         <% profil = null
                         pic.forEach(function(val) {
                             if (val.type == 'profil') {
@@ -59,9 +79,17 @@
                         <% } %>
                         >
                     <% if (login === user.login) { %>
-                        <div id='div_pic_mod' hidden>
+                        <div class='div_pic_mod' hidden>
                             <input type="file" class="form-control-file" id="picture" aria-describedby="fileHelp">
                         </div>
+                    <% } else if (pic.length > 0) { %>
+                    </br>
+                    </br>
+                        <% if(like === 'i like' || like === 'match') { %>
+                            <button id='like' onclick='like()' type="button" class="btn btn-success" style="width: 200px">♥</button>
+                        <% } else { %>
+                            <button id='like' onclick='like()' type="button" class="btn btn-secondary" style="width: 200px">♥</button>
+                        <% } %>
                     <% } %>
                 </center>
             <br/>

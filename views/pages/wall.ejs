@@ -17,16 +17,16 @@
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th>Photo</th>
-                        <th>Login</th>
-                        <th>Tag en commun</th>
-                        <th>Profil</th>
+                        <th style="text-align:center">Photo</th>
+                        <th style="text-align:center">Login</th>
+                        <th style="text-align:center">Tag en commun</th>
+                        <th style="text-align:center">Profil</th>
                     </tr>
                 </thead>
                 <tbody>
                     <%users.forEach((val) => { %>
                         <tr>
-                            <th>
+                            <th style="vertical-align:middle; text-align:center">
                                 <% if (val[1].pic) { %>
                                     <img height="200px" width="200px" src='picture/<%= val[1].pic %>'>
                                 <% } else { %>
