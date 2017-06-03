@@ -33,10 +33,16 @@ async function find_by_tag(bdd, res, sess) {
             }
         }));
     }));
+
     let to_array = [];
     for (var login in result) {
         to_array.push([login, result[login]]);
     }
     await to_array.sort((a, b) => b[1].count - a[1].count);
+
+    await Promise.all(to_array.map(async (val) => { // Score
+        val[1].score = await bdd.collection('like').find({ like: val[0]}).count()
+    }))
+    console.log(to_array)
     res.render('pages/wall', { page: 'wall', login: sess.login, users: to_array });
 }
