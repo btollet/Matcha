@@ -17,6 +17,94 @@
 
     <div class="container">
         <div id="main_div" class="jumbotron">
+            <p>
+                <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                    Recherche
+                </button>
+            </p>
+            <div class="collapse" id="collapseExample">
+                <div class="card card-block">
+                    <p>Criteres:</p>
+                    <div class='row'>
+                        <div class='col-sm-3'>
+                            <div class='form-check'>
+                                <label class="form-check-label">
+                                    <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1"> ♂ Homme
+                                </label>
+                            </div>
+                            <div class='form-check'>
+                                <label class="form-check-label">
+                                    <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1"> ♀ Femme
+                                </label>
+                            </div>
+                        </div>
+                        <div class='col-sm-3'>
+                            <div class='form-check'>
+                                <label class="form-check-label">
+                                    <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1"> Heterosexuel
+                                </label>
+                            </div>
+                            <div class='form-check'>
+                                <label class="form-check-label">
+                                    <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1"> Gay / Lesbienne
+                                </label>
+                            </div>
+                            <div class='form-check'>
+                                <label class="form-check-label">
+                                    <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1"> Bisexuel
+                                </label>
+                            </div>
+                        </div>
+                        <div class='col-sm-2'></div>
+                        <div class='col-sm-4'>
+                            <div class='form-check'>
+                                Age:
+                                <small class="text-muted">Minimum <input type="number" min='16' max='120' value="16" style="width:40px"></small>
+                                <small class="text-muted">Maximum <input type="number" min='16' max='120' value="120" style="width:40px"></small>
+                            </div>
+                            <div class='form-check'>
+                                Score:
+                                <small class="text-muted">Minimum <input type="number" min='0' value="0" style="width:40px"></small>
+                                <small class="text-muted">Maximum <input type="number" min='0' value="100" style="width:40px"></small>
+                            </div>
+                            <div class='form-check'>
+                                Distance:
+                                <small class="text-muted">Maximum <input type="number" min='0' value="100" style="width:40px"></small>
+                            </div>
+                        </div>
+                    </div></br>
+                    <p>Tag: <small class="text-muted">(rechercher quelqu'un avec des tags precis)</small></p>
+                    <div class='row'>
+                        <div class='col-sm-4'>
+                            <div id="add_tag_div" class="form-group">
+                                <input type="text" class="form-control" id="add_tag" placeholder="#bg" maxlength="21">
+                                <button type="submit" class="btn btn-primary" onclick="add_tag()">Ajouter</button>
+                                <small class="form-text text-muted">Tag sans espace(ex: #bio, #geek, #piercing)</small>
+                                <div id="add_tag_err" class="form-control-feedback" hidden="hidden">Erreur dans le tag</div>
+                                <small id="add_tag_err_mes" class="form-text text-muted" hidden="hidden">Votre tag doit:<br/>- Commencer pas un #<br/>- Contenir uniquement des lettres et chiffres<br/>
+                                    - Posseder entre 1 et 20 caracteres (# non compris)
+                                </small>
+                            </div>
+                        </div>
+                        <div class='col-sm-2'></div>
+                        <div class='col-sm-4'>
+                            <div class="form-group">
+                                <fieldset id="my_tag_dis" disabled>
+                                    <select class="form-control" id="my_tag">
+                                        <option>Aucun tag</option>
+                                    </select>
+                                </fieldset>
+                                <button type="submit" class="btn btn-primary" onclick="del_tag()">Retirer</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class='row'>
+                        <div class='col-sm-10'></div>
+                        <div class='col-sm-2'><button type="submit" class="btn btn-primary">Recherche</button></div>
+                    </div>
+                </div>
+            </div>
+            <hr>
             <div class="form-inline">
                 <label class="mr-sm-2" for="inlineFormCustomSelect">Trier par</label>
                 <select class="custom-select mb-2 mr-sm-2 mb-sm-0" id="sort">
@@ -40,21 +128,21 @@
                     <th style="vertical-align:middle; text-align:center">Login</th>
                     <th style="vertical-align:middle; text-align:center">
                         Age</br>
-                        <small id="passwordHelpInline" class="text-muted">Min <input id="age_min" type="number" value="16" style="width:40px"></small>
+                        <small class="text-muted">Min <input id="age_min" type="number" min='16' max='120' value="16" style="width:40px"></small>
                         <script>document.getElementById('age_min').addEventListener('change', draw_table);</script>
-                        <small id="passwordHelpInline" class="text-muted">Max <input id="age_max" type="number" value="120" style="width:40px"></small>
+                        <small class="text-muted">Max <input id="age_max" type="number" min='16' max='120' value="120" style="width:40px"></small>
                         <script>document.getElementById('age_max').addEventListener('change', draw_table);</script>
                     </th>
                     <th style="vertical-align:middle; text-align:center">
                         Tag en commun</br>
-                        <small id="passwordHelpInline" class="text-muted">Min <input id="tag_min" type="number" value="1" style="width:40px"></small>
+                        <small class="text-muted">Min <input id="tag_min" type="number" min='1' value="1" style="width:40px"></small>
                         <script>document.getElementById('tag_min').addEventListener('change', draw_table);</script>
                     </th>
                     <th style="vertical-align:middle; text-align:center">
                         Score</br>
-                        <small id="passwordHelpInline" class="text-muted">Min <input id="score_min" type="number" value="0" style="width:40px"></small>
+                        <small class="text-muted">Min <input id="score_min" type="number" min='0' value="0" style="width:40px"></small>
                         <script>document.getElementById('score_min').addEventListener('change', draw_table);</script>
-                        <small id="passwordHelpInline" class="text-muted">Max <input id="score_max" type="number" value="100" style="width:40px"></small>
+                        <small class="text-muted">Max <input id="score_max" type="number" min='0' value="100" style="width:40px"></small>
                         <script>document.getElementById('score_max').addEventListener('change', draw_table);</script>
                     </th>
                     <th style="vertical-align:middle; text-align:center">Profil</th>

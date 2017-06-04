@@ -1,3 +1,5 @@
+let tag_list = new Array()
+
 function draw_table() {
     let result = ''
 
@@ -33,7 +35,7 @@ function check_draw(user) {
     if (parseInt(user[1].age) >= age_min && parseInt(user[1].age) <= age_max) {
         if (parseInt(user[1].count) >= tag_min) {
             if (parseInt(user[1].score) >= score_min && parseInt(user[1].score) <= score_max)
-                return(true)
+            return(true)
         }
     }
     return(false)
@@ -49,12 +51,14 @@ function sort() {
         else
         users.sort((a, b) => b[1].age - a[1].age)
     }
-    /*else if (sort_by === 'Distance') {
-        if (sens === 'Croissant')
-        users.sort((a, b) => a[1].age - b[1].count)
-        else
-        users.sort((a, b) => b[1].age - a[1].count)
-    }*/
+    /*
+    else if (sort_by === 'Distance') {
+    if (sens === 'Croissant')
+    users.sort((a, b) => a[1].age - b[1].count)
+    else
+    users.sort((a, b) => b[1].age - a[1].count)
+
+    */
     else if (sort_by === 'Score') {
         if (sens === 'Croissant')
         users.sort((a, b) => a[1].score - b[1].score)
@@ -69,4 +73,68 @@ function sort() {
     }
 
     draw_table()
+}
+
+
+function sucess(err_mes) {
+    document.getElementById('add_tag').setAttribute('class', 'form-control')
+    document.getElementById('add_tag_div').setAttribute('class', 'form-group has-success')
+    document.getElementById('add_tag_err').setAttribute('hidden', 'hidden')
+    err_mes.setAttribute('hidden', 'hidden')
+}
+
+function danger(err_mes) {
+    document.getElementById('add_tag').setAttribute('class', 'form-control')
+    document.getElementById('add_tag_div').setAttribute('class', 'form-group has-danger')
+    document.getElementById('add_tag_err').removeAttribute('hidden')
+    err_mes.removeAttribute('hidden')
+}
+
+function add_tag() {
+    let tag = document.getElementById('add_tag')
+    let err = document.getElementById('add_tag_err')
+    let err_mes = document.getElementById('add_tag_err_mes')
+    let my_tag = document.getElementById('my_tag')
+    let my_tag_dis = document.getElementById('my_tag_dis')
+    let regex = /^#([a-zA-Z0-9]{1,20})$/
+
+    if (regex.test(tag.value)) {
+
+        if (!tag_list.includes(tag.value.toLowerCase())) {
+            sucess(err_mes)
+            if (my_tag_dis.hasAttribute('disabled')) {
+                my_tag.remove("Aucun centre d'interet")
+                my_tag_dis.removeAttribute('disabled')
+            }
+            let option = document.createElement("option")
+            option.text = tag.value.toLowerCase()
+            my_tag.add(option)
+            tag_list.push(tag.value.toLowerCase())
+        }
+        else {
+            danger(err_mes)
+            err.innerHTML = 'Tag deja present'
+            err_mes.setAttribute('hidden', 'hidden')
+        }
+    }
+    else {
+        err.innerHTML = 'Erreur dans le tag'
+        danger(err_mes)
+    }
+}
+
+function del_tag() {
+    let my_tag = document.getElementById('my_tag')
+
+    if (!my_tag_dis.hasAttribute('disabled')) {
+        my_tag.remove(my_tag.selectedIndex)
+        tag_list.splice(tag_list.indexOf(my_tag.selectedIndex))
+        if (my_tag.length == 0) {
+            document.getElementById('my_tag_dis').setAttribute('disabled', '')
+            let option = document.createElement("option")
+            option.text = "Aucun centre d'interet"
+            my_tag.add(option)
+        }
+
+    }
 }
