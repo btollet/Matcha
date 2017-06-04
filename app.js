@@ -153,16 +153,6 @@ async function nb_picture(cb) {
     cb(null, true)
 }
 
-async function test(req) {
-    await bdd.collection('notification').insertOne({ login: req.query.login, mes: req.query.mes, vue: false });
-    notif.emit('messages', req.query.login)
-}
-
-
-app.get('/test', (req, res) => {
-    test(req);
-    res.send(req.query.mes + ' -> ' + req.query.login)
-})
 
 server.listen(3000, () => {
     console.log('Listening on port 3000')

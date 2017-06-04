@@ -1,0 +1,72 @@
+function draw_table() {
+    let result = ''
+
+    users.forEach((val) => {
+        if (check_draw(val)) {
+            let pic = 'default.jpg'
+            if (val[1].pic)
+            pic = val[1].pic
+
+            result += `
+            <tr>
+            <th style="vertical-align:middle; text-align:center">
+            <img height="200px" width="200px" src='picture/${pic}'>
+            </th>
+            <th style="vertical-align:middle; text-align:center">${val[0]}</br>${val[1].gender}</th>
+            <th style="vertical-align:middle; text-align:center">${val[1].age}</th>
+            <th style="vertical-align:middle; text-align:center">${val[1].count}</th>
+            <th style="vertical-align:middle; text-align:center">${val[1].score}</th>
+            <th style="vertical-align:middle; text-align:center"><a href='account?login=${val[0]}'>Voir profil</a></th>
+            </tr>`
+        }
+    })
+    document.getElementById('table').innerHTML = result
+}
+
+function check_draw(user) {
+    let age_min = document.getElementById('age_min').value
+    let age_max = document.getElementById('age_max').value
+    let tag_min = document.getElementById('tag_min').value
+    let score_min = document.getElementById('score_min').value
+    let score_max = document.getElementById('score_max').value
+
+    if (parseInt(user[1].age) >= age_min && parseInt(user[1].age) <= age_max) {
+        if (parseInt(user[1].count) >= tag_min) {
+            if (parseInt(user[1].score) >= score_min && parseInt(user[1].score) <= score_max)
+                return(true)
+        }
+    }
+    return(false)
+}
+
+function sort() {
+    let sort_by = document.getElementById('sort').value
+    let sens = document.getElementById('sens').value
+
+    if (sort_by === 'Age') {
+        if (sens === 'Croissant')
+        users.sort((a, b) => a[1].age - b[1].age)
+        else
+        users.sort((a, b) => b[1].age - a[1].age)
+    }
+    /*else if (sort_by === 'Distance') {
+        if (sens === 'Croissant')
+        users.sort((a, b) => a[1].age - b[1].count)
+        else
+        users.sort((a, b) => b[1].age - a[1].count)
+    }*/
+    else if (sort_by === 'Score') {
+        if (sens === 'Croissant')
+        users.sort((a, b) => a[1].score - b[1].score)
+        else
+        users.sort((a, b) => b[1].score - a[1].score)
+    }
+    else if (sort_by === 'Tag en commun') {
+        if (sens === 'Croissant')
+        users.sort((a, b) => a[1].count - b[1].count)
+        else
+        users.sort((a, b) => b[1].count - a[1].count)
+    }
+
+    draw_table()
+}
