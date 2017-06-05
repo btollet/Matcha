@@ -25,7 +25,7 @@ module.exports = {
             {
                 $set: {
                 gender: form.gender,
-                age: form.age,
+                age: parseInt(form.age),
                 orientation: form.orientation,
                 pref: pref,
                 bio: form.bio,
@@ -75,7 +75,7 @@ module.exports = {
                     f_name: form.f_name,
                     name: form.name,
                     gender: form.gender,
-                    age: form.age,
+                    age: parseInt(form.age),
                     orientation: form.orientation,
                     pref: pref }
             })

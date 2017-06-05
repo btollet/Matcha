@@ -41,6 +41,36 @@ function check_draw(user) {
     return(false)
 }
 
+function search() {
+    let formData = new FormData()
+    formData.append("man", document.getElementById('man').checked)
+    formData.append("woman", document.getElementById('woman').checked)
+    formData.append("hetero", document.getElementById('hetero').checked)
+    formData.append("gay", document.getElementById('gay').checked)
+    formData.append("bi", document.getElementById('bi').checked)
+    formData.append("age_min", document.getElementById('s_age_min').value)
+    formData.append("age_max", document.getElementById('s_age_max').value)
+    formData.append("score_min", document.getElementById('s_score_min').value)
+    formData.append("score_max", document.getElementById('s_score_max').value)
+    formData.append("dis", document.getElementById('s_dis').value)
+    formData.append("tags", JSON.stringify(tag_list))
+
+    let request = new XMLHttpRequest()
+    request.onload = () => {
+        if (request.readyState == 4 && request.status == 200) {
+            let rep = request.responseText
+            if (rep) {
+                users = JSON.parse(rep)
+                document.getElementById('search').click()
+                sort()
+                draw_table()
+            }
+        }
+    }
+    request.open('POST', '/search')
+    request.send(formData)
+}
+
 function sort() {
     let sort_by = document.getElementById('sort').value
     let sens = document.getElementById('sens').value

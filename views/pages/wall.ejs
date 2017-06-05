@@ -18,7 +18,7 @@
     <div class="container">
         <div id="main_div" class="jumbotron">
             <p>
-                <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                <button id='search' class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
                     Recherche
                 </button>
             </p>
@@ -29,29 +29,29 @@
                         <div class='col-sm-3'>
                             <div class='form-check'>
                                 <label class="form-check-label">
-                                    <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1"> ♂ Homme
+                                    <input id='man' class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1"> ♂ Homme
                                 </label>
                             </div>
                             <div class='form-check'>
                                 <label class="form-check-label">
-                                    <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1"> ♀ Femme
+                                    <input id='woman' class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1"> ♀ Femme
                                 </label>
                             </div>
                         </div>
                         <div class='col-sm-3'>
                             <div class='form-check'>
                                 <label class="form-check-label">
-                                    <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1"> Heterosexuel
+                                    <input id='hetero' class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1"> Heterosexuel
                                 </label>
                             </div>
                             <div class='form-check'>
                                 <label class="form-check-label">
-                                    <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1"> Gay / Lesbienne
+                                    <input id='gay' class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1"> Gay / Lesbienne
                                 </label>
                             </div>
                             <div class='form-check'>
                                 <label class="form-check-label">
-                                    <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1"> Bisexuel
+                                    <input id='bi' class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1"> Bisexuel
                                 </label>
                             </div>
                         </div>
@@ -59,17 +59,17 @@
                         <div class='col-sm-4'>
                             <div class='form-check'>
                                 Age:
-                                <small class="text-muted">Minimum <input type="number" min='16' max='120' value="16" style="width:40px"></small>
-                                <small class="text-muted">Maximum <input type="number" min='16' max='120' value="120" style="width:40px"></small>
+                                <small class="text-muted">Minimum <input id='s_age_min' type="number" min='16' max='120' value="16" style="width:40px"></small>
+                                <small class="text-muted">Maximum <input id='s_age_max' type="number" min='16' max='120' value="120" style="width:40px"></small>
                             </div>
                             <div class='form-check'>
                                 Score:
-                                <small class="text-muted">Minimum <input type="number" min='0' value="0" style="width:40px"></small>
-                                <small class="text-muted">Maximum <input type="number" min='0' value="100" style="width:40px"></small>
+                                <small class="text-muted">Minimum <input id='s_score_min' type="number" min='0' value="0" style="width:40px"></small>
+                                <small class="text-muted">Maximum <input id='s_score_max' type="number" min='0' value="100" style="width:40px"></small>
                             </div>
                             <div class='form-check'>
                                 Distance:
-                                <small class="text-muted">Maximum <input type="number" min='0' value="100" style="width:40px"></small>
+                                <small class="text-muted">Maximum <input id='s_dis' type="number" min='0' value="100" style="width:40px"></small>
                             </div>
                         </div>
                     </div></br>
@@ -100,7 +100,7 @@
                     </div>
                     <div class='row'>
                         <div class='col-sm-10'></div>
-                        <div class='col-sm-2'><button type="submit" class="btn btn-primary">Recherche</button></div>
+                        <div class='col-sm-2'><button type="submit" class="btn btn-primary" onclick='search()'>Recherche</button></div>
                     </div>
                 </div>
             </div>
@@ -135,7 +135,7 @@
                     </th>
                     <th style="vertical-align:middle; text-align:center">
                         Tag en commun</br>
-                        <small class="text-muted">Min <input id="tag_min" type="number" min='1' value="1" style="width:40px"></small>
+                        <small class="text-muted">Min <input id="tag_min" type="number" min='0' value="0" style="width:40px"></small>
                         <script>document.getElementById('tag_min').addEventListener('change', draw_table);</script>
                     </th>
                     <th style="vertical-align:middle; text-align:center">

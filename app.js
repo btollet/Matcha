@@ -32,6 +32,7 @@ let page_js = require('./include/pages')
 let profil_js = require('./include/profil')
 let notif_js = require('./include/notif')
 let like_js = require('./include/like.js')
+let wall_js = require('./include/wall.js')
 
 
 app.use(session({secret: 'podl5amc-daso12w' }))
@@ -141,6 +142,10 @@ app.post('/notif_see', (req, res) => {
 
 app.post('/like', upload.fields([]), (req, res) => {
     like_js.like(req.body.name, bdd, res, req.session, notif)
+})
+
+app.post('/search', upload.fields([]), (req, res) => {
+    wall_js.option(req.body, bdd, res, req.session)
 })
 
 //--- Async
