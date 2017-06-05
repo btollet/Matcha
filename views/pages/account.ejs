@@ -59,6 +59,12 @@
 
     <div class="container">
         <div id="main_div" class="jumbotron">
+            <% if (login !== user.login) { %>
+            <div class='row'>
+                <div class='col-sm-11'></div>
+                <div class='col-sm-1'><button id='bloque' onclick='bloque()' type="button" class="btn btn-secondary btn-sm" >Bloquer</button></div>
+            </div>
+            <% } %>
                 <center>
                     <h3>
                         <b><u><%= user.login %></u></b>
@@ -106,6 +112,8 @@
                                     <li><%= user.gender %></li>
                                     <li><% if (user.age) { %><%= user.age %> ans<% } %></li>
                                     <li><%= user.orientation %></li>
+                                    </br>
+                                    <li>Score: <%= score %></li>
                                 </ul>
                             </blockquote>
                             <% if(login == user.login) { %>

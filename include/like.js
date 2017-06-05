@@ -14,16 +14,24 @@ async function check_like(name, bdd, res, sess, notif) {
             await bdd.collection('notification').insertOne({
                 login: name,
                 mes: `<a href="account?login=${sess.login}">${sess.login}</a> ne vous like plus`,
-                vue: false })
+                vue: false
+            })
             notif.emit('messages', name)
             res.end('unlike')
         }
         else {
+            let like_me = await bdd.collection('like').findOne({ login: name, like: sess.login})
+            let mes
+            if (like_me)
+            mes = `<a href="account?login=${sess.login}">${sess.login}</a> vous like aussi, le chat est disponnible`
+            else
+            mes = `<a href="account?login=${sess.login}">${sess.login}</a> vous like`
             bdd.collection('like').insertOne({ login: sess.login, like: name })
             await bdd.collection('notification').insertOne({
                 login: name,
-                mes: `<a href="account?login=${sess.login}">${sess.login}</a> vous like`,
-                vue: false })
+                mes: mes,
+                vue: false
+            })
             notif.emit('messages', name)
             res.end('like')
         }

@@ -45,7 +45,7 @@ MongoClient.connect('mongodb://localhost:27017', (err, base) => {
 })
 
 app.set('view engine', 'ejs')
-
+app.set("trust proxy", true)
 //--- Socket io
 var notif = io
   .of('/notif')
@@ -55,7 +55,7 @@ var notif = io
 
 //--- App.get
 app.get('/', (req, res) => {
-    page_js.call_page('wall', bdd, res, req.session, null)
+    page_js.call_page('wall', bdd, res, req.session, null, notif)
 })
 
 app.get('/deco', (req, res) => {
@@ -64,12 +64,12 @@ app.get('/deco', (req, res) => {
 })
 
 app.get('/register', (req, res) => {
-    page_js.call_page('register', bdd, res, req.session, null)
+    page_js.call_page('register', bdd, res, req.session, null, notif)
 })
 
 app.get('/account', (req, res) => {
     sess = req.session
-    page_js.call_page('account', bdd, res, req.session, req.query.login)
+    page_js.call_page('account', bdd, res, req.session, req.query.login, notif)
 })
 
 
@@ -159,6 +159,4 @@ async function nb_picture(cb) {
 }
 
 
-server.listen(3000, () => {
-    console.log('Listening on port 3000')
-})
+server.listen(3000, '127.0.0.1')

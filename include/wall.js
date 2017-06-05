@@ -28,6 +28,7 @@ async function find_option(option, bdd, res, sess, gender, orien) {
     let my_tag = await bdd.collection('tag').find({ login: sess.login }).toArray()
 
     let tags = JSON.parse(option.tags)
+    //--- Age / Genre / Orientation / Distance
     let users = await bdd.collection('users').find({
         $and: [ { $or: [ { gender: gender[0] }, { gender: gender[1] } ] },
         { $or: [ { orientation: orien[0] }, { orientation: orien[1] }, { orientation: orien[2] } ] },
@@ -38,8 +39,10 @@ async function find_option(option, bdd, res, sess, gender, orien) {
 
     let result = new Object()
     await Promise.all(users.map(async (val) => {
+        //--- Score
         let score = await bdd.collection('like').find({ like: val.login }).count()
         if (score >= parseInt(option.score_min) && score <= parseInt(option.score_max)) {
+            //--- Tags
             let check_tag = true
             await Promise.all(tags.map(async (tag) => {
                 let find = await bdd.collection('tag').findOne({ tag: tag, login: val.login})
@@ -47,7 +50,7 @@ async function find_option(option, bdd, res, sess, gender, orien) {
                 check_tag = false
             }))
             if (check_tag) {
-                let count = 0;
+                let count = 0
                 await Promise.all(my_tag.map(async (tag) => {
                     let have_tag = await bdd.collection('tag').findOne({ login: val.login, tag: tag.tag })
                     if (have_tag)

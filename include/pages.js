@@ -1,7 +1,7 @@
 let wall_js = require('./wall.js')
 
 module.exports = {
-    call_page: (name, bdd, res, sess, user) => { // User = pour voir profil
+    call_page: (name, bdd, res, sess, user, notif) => { // User = pour voir profil
         if (!sess.login) {
             if (name === 'register')
             res.render('pages/register', { page: 'register', login: null})
@@ -9,15 +9,15 @@ module.exports = {
             res.render('pages/index', { page: 'accueil', login: null})
         }
         else if (!sess.first_form)
-            picture_tag('form', bdd, res, sess)
+        picture_tag('form', bdd, res, sess)
         else {
             if (name === 'register')
             picture_tag('wall', bdd, res, sess)
             else if (name === 'account') {
                 if (user)
-                account(name, bdd, res, sess, user)
+                account(name, bdd, res, sess, user, notif)
                 else
-                account(name, bdd, res, sess, sess.login)
+                account(name, bdd, res, sess, sess.login, notif)
             }
             else
             wall_js.no_option(bdd, res, sess)
@@ -33,7 +33,7 @@ async function picture_tag(name, bdd, res, sess) {
     res.render('pages/' + name, { page: name, tag: tag, pic: picture, login: sess.login})
 }
 
-async function account(name, bdd, res, sess, user) {
+async function account(name, bdd, res, sess, user, notif) {
     user = new RegExp(["^", user, "$"].join(""), "i")
     let info = await bdd.collection('users').findOne({ login: user })
     if (!info) {
@@ -42,9 +42,10 @@ async function account(name, bdd, res, sess, user) {
     }
     let tag = await bdd.collection('tag').find({ login: user }).toArray()
     let picture = await bdd.collection('picture').find({ login: user }).toArray()
+    let score = await bdd.collection('like').find({ like: user }).count()
     let like = await bdd.collection('like').findOne({ login: user, like: sess.login })
     if (like)
-        like = 'like me'
+    like = 'like me'
     let i_like = await bdd.collection('like').findOne({ login: sess.login, like: user })
     if (i_like) {
         if (like)
@@ -52,8 +53,14 @@ async function account(name, bdd, res, sess, user) {
         else
         like = 'i like'
     }
-    if (!info.login === sess.login)
-    info.mail = null
+    if (info.login !== sess.login) {
+        await bdd.collection('notification').insertOne({
+            login: info.login,
+            mes: `<a href="account?login=${sess.login}">${sess.login}</a> a visiter votre profil`,
+            vue: false })
+        notif.emit('messages', info.login)
+        info.mail = null
+    }
 
     res.render('pages/' + name, {
         page: name,
@@ -61,5 +68,6 @@ async function account(name, bdd, res, sess, user) {
         pic: picture,
         login: sess.login,
         user: info,
-        like: like })
-}
+        like: like,
+        score: score })
+    }
