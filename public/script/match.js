@@ -7,15 +7,18 @@ function draw_table() {
         pic = val[1].pic
 
         result += `
-        <tr>
-        <th style="vertical-align:middle; text-align:center">
-        <img height="200px" width="200px" src='picture/${pic}'>
-        </th>
-        <th style="vertical-align:middle; text-align:center">${val[0]}</br>${val[1].gender}</th>
-        <th style="vertical-align:middle; text-align:center">${val[1].score}</th>
-        <th style="vertical-align:middle; text-align:center"></th>
-        <th style="vertical-align:middle; text-align:center"><a href='account?login=${val[0]}'>Voir profil</a></th>
-        </tr>`
+        <div class="card">
+            <div class="card-header" role="tab" data-toggle="collapse" data-parent="#accordion" href="#${val[0]}" aria-expanded="true" aria-controls="collapseOne">
+                <h5 class="mb-0">
+                        ${val[0]}
+                </h5>
+            </div>
+            <div id="${val[0]}" class="collapse" role="tabpanel" aria-labelledby="headingOne">
+                <div class="card-block">
+                    Conversation
+                </div>
+            </div>
+        </div>`
     })
     document.getElementById('table').innerHTML = result
 }
