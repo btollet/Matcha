@@ -11,6 +11,10 @@ module.exports = {
     my_notif_del: (bdd, res, sess) => {
         bdd.collection('notification').removeMany({ login: sess.login, vue: true })
         res.end('ok')
+    },
+
+    send_notif: (name, mes, bdd, sess, notif) => {
+        add_notif(name, mes, bdd, sess, notif)
     }
 }
 
@@ -23,4 +27,17 @@ async function my_notif_check(bdd, res, sess) {
     }
     else
     res.end('Aucune notification')
+}
+
+async function add_notif(name, mes, bdd, sess, notif) {
+    let bloque = await bdd.collection('bloque').findOne({ login: name, bloque: sess.login })
+
+    if (!bloque) {
+        await bdd.collection('notification').insertOne({
+            login: name,
+            mes: mes,
+            vue: false
+        })
+        notif.emit('messages', name)
+    }
 }

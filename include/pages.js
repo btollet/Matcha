@@ -1,4 +1,5 @@
 let wall_js = require('./wall.js')
+let notif_js = require('./notif')
 
 module.exports = {
     call_page: (name, bdd, res, sess, user, notif) => { // User = pour voir profil
@@ -73,12 +74,9 @@ async function account(name, bdd, res, sess, user, notif) {
 
         //--- Notification
         if (info.login !== sess.login) {
-            await bdd.collection('notification').insertOne({
-                login: info.login,
-                mes: `<a href="account?login=${sess.login}">${sess.login}</a> a visiter votre profil`,
-                vue: false
-            })
-            notif.emit('messages', info.login)
+            let mes = `<a href="account?login=${sess.login}">${sess.login}</a> a visiter votre profil`
+            notif_js.send_notif(info.login, mes, bdd, sess, notif)
+
             info.mail = null
             if (info.fake >= 10)
             fake = true;

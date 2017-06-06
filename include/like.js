@@ -1,3 +1,5 @@
+let notif_js = require('./notif')
+
 module.exports = {
     like: (name, bdd, res, sess, notif) => {
         check_like(name, bdd, res, sess, notif)
@@ -13,12 +15,8 @@ async function check_like(name, bdd, res, sess, notif) {
             let is_like = await bdd.collection('like').findOne({ login: sess.login, like: name })
             if (is_like) {
                 bdd.collection('like').remove({ login: sess.login, like: name })
-                await bdd.collection('notification').insertOne({
-                    login: name,
-                    mes: `<a href="account?login=${sess.login}">${sess.login}</a> ne vous like plus`,
-                    vue: false
-                })
-                notif.emit('messages', name)
+                let mes = `<a href="account?login=${sess.login}">${sess.login}</a> ne vous like plus`
+                notif_js.send_notif(name, mes, bdd, sess, notif)
                 res.end('unlike')
             }
             else {
@@ -29,12 +27,7 @@ async function check_like(name, bdd, res, sess, notif) {
                 else
                 mes = `<a href="account?login=${sess.login}">${sess.login}</a> vous like`
                 bdd.collection('like').insertOne({ login: sess.login, like: name })
-                await bdd.collection('notification').insertOne({
-                    login: name,
-                    mes: mes,
-                    vue: false
-                })
-                notif.emit('messages', name)
+                notif_js.send_notif(name, mes, bdd, sess, notif)
                 res.end('like')
             }
         }
