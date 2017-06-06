@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <% include ../partials/head %>
+</head>
+
+<body>
+
+    <header>
+        <% include ../partials/header %>
+    </header>
+
+    <script>
+    let users = <%- JSON.stringify(users) %>
+    </script>
+    <script src='script/match.js'></script>
+
+    <div class="container">
+        <div id="div_main" class="jumbotron">
+            Match
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th style="vertical-align:middle; text-align:center">Photo</th>
+                    <th style="vertical-align:middle; text-align:center">Login</th>
+                    <th style="vertical-align:middle; text-align:center">Score</th>
+                    <th style="vertical-align:middle; text-align:center">Chat</th>
+                    <th style="vertical-align:middle; text-align:center">Profil</th>
+                </tr>
+            </thead>
+            <tbody id='table'>
+                <script>draw_table()</script>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<footer>
+    <% include ../partials/footer %>
+</footer>
+
+</body>
+
+</html>

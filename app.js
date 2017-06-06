@@ -73,6 +73,14 @@ app.get('/account', (req, res) => {
     page_js.call_page('account', bdd, res, req.session, req.query.login, notif)
 })
 
+app.get('/match', (req, res) => {
+    page_js.call_page('match', bdd, res, req.session, null, notif)
+})
+
+app.get('/historique', (req, res) => {
+    page_js.call_page('historique', bdd, res, req.session, null, notif)
+})
+
 
 //--- App.post
 app.post('/register', upload.fields([]), (req, res) => {

@@ -5,57 +5,47 @@
     <a href="/" class="navbar-brand">Matcha</a>
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-    <% if (!login) { %>
-        <ul class="navbar-nav mr-auto">
-            <% if (page == 'accueil'){ %>
-                <li class="nav-item active">
-            <% } else { %>
-                <li class="nav-item">
-            <% } %>
-            <a class="nav-link" href="/">Accueil</a>
-            </li>
-            <% if (page == 'register'){ %>
-                <li class="nav-item active">
-            <% } else { %>
-                <li class="nav-item">
-            <% } %>
-            <a class="nav-link" href="/register">Inscription</a>
-            </li>
-        </ul>
-    <% } else { %>
-        <script>let my_login = '<%= login %>'</script>
-        <script src="/socket.io/socket.io.js"></script>
-        <script src="/script/navbar.js"></script>
+        <% if (!login) { %>
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item <% if (page == 'accueil'){ %>active<% } %>">
+                    <a class="nav-link" href="/">Accueil</a>
+                </li>
+                <li class="nav-item <% if (page == 'register'){ %>active<% } %>">
+                    <a class="nav-link" href="/register">Inscription</a>
+                </li>
+            </ul>
+        <% } else { %>
+            <script>let my_login = '<%= login %>'</script>
+            <script src="/socket.io/socket.io.js"></script>
+            <script src="/script/navbar.js"></script>
 
-        <ul class="navbar-nav mr-auto">
-            <% if (page == 'wall'){ %>
-                <li class="nav-item active">
-            <% } else { %>
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item <% if (page == 'wall'){ %>active<% } %>">
+                    <a class="nav-link" href="/">Accueil</a>
+                </li>
+                <li class="nav-item <% if (page == 'match'){ %>active<% } %>">
+                    <a class="nav-link" href="/match">Match</a>
+                </li>
+                <li class="nav-item <% if (page == 'account'){ %>active<% } %>">
+                    <a class="nav-link" href="/account">Mon compte</a>
+                </li>
+                <li class="nav-item <% if (page == 'historique'){ %>active<% } %>">
+                    <a class="nav-link" href="/historique">Historique</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav my-2 my-lg-0">
+                <li id='drop' class="nav-item dropdown">
+                    <button id='drop_but' type="button" class="btn btn-secondary dropdown-toggle" onclick='dropdown()' data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Notification <span id='notif_num'></span>
+                    </button>
+                    <div id='my_notif' class="dropdown-menu" style='overflow: auto; max-height: 400px; width: 200px'>
+                        <script>check_notif()</script>
+                    </div>
+                </li>
                 <li class="nav-item">
-            <% } %>
-            <a class="nav-link" href="/">Accueil</a>
-            </li>
-            <% if (page == 'account'){ %>
-                <li class="nav-item active">
-            <% } else { %>
-                <li class="nav-item">
-            <% } %>
-            <a class="nav-link" href="/account">Mon compte</a>
-            </li>
-        </ul>
-        <ul class="navbar-nav my-2 my-lg-0">
-            <li id='drop' class="nav-item dropdown">
-                <button id='drop_but' type="button" class="btn btn-secondary dropdown-toggle" onclick='dropdown()' data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Notification <span id='notif_num'></span>
-                </button>
-                <div id='my_notif' class="dropdown-menu" style='overflow: auto; max-height: 400px; width: 200px'>
-                    <script>check_notif()</script>
-                </div>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/deco">Deconnexion</a>
-            </li>
-        </ul>
-    <% } %>
+                    <a class="nav-link" href="/deco">Deconnexion</a>
+                </li>
+            </ul>
+        <% } %>
     </div>
 </nav>

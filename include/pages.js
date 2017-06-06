@@ -1,4 +1,5 @@
 let wall_js = require('./wall.js')
+let match_js = require('./match.js')
 let notif_js = require('./notif')
 
 module.exports = {
@@ -20,6 +21,10 @@ module.exports = {
                 else
                 account(name, bdd, res, sess, sess.login, notif)
             }
+            else if (name === 'match')
+            match_js.match(bdd, res, sess)
+            else if (name === 'historique')
+            normal_page(name, res, sess)
             else
             wall_js.no_option(bdd, res, sess)
         }
@@ -27,6 +32,10 @@ module.exports = {
 }
 
 //--- async
+async function normal_page(name, res, sess) {
+    res.render('pages/' + name, { page: name, login: sess.login})
+}
+
 async function picture_tag(name, bdd, res, sess) {
     let tag = await bdd.collection('tag').find({ login: sess.login }).toArray()
     let picture = await bdd.collection('picture').find({ login: sess.login}).toArray()
