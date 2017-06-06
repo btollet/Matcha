@@ -52,250 +52,313 @@
         request.open("POST", "/like");
         request.send(formData);
     }
+
+    function bloque() {
+        let button = document.getElementById('bloque');
+        let like = document.getElementById('like');
+        let formData = new FormData();
+        formData.append("name", user.login);
+
+        let request = new XMLHttpRequest();
+        request.onload = () => {
+            if (request.readyState == 4 && request.status == 200) {
+                if (request.responseText === 'bloque') {
+                    button.setAttribute('class', 'btn btn-danger btn-sm')
+                    like.setAttribute('class', 'btn btn-secondary')
+                    like.setAttribute('hidden', 'hidden')
+                }
+                else if (request.responseText === 'unbloque') {
+                    button.setAttribute('class', 'btn btn-secondary btn-sm')
+                    like.removeAttribute('hidden')
+                }
+            }
+        }
+        request.open("POST", "/bloque");
+        request.send(formData);
+    }
+
+    function fake() {
+        let div = document.getElementById('main_div');
+        let like = document.getElementById('like');
+        let formData = new FormData();
+        formData.append("name", user.login);
+
+        let request = new XMLHttpRequest();
+        request.onload = () => {
+            if (request.readyState == 4 && request.status == 200) {
+                if (request.responseText === 'ok')
+                    div.innerHTML = `<center>Merci de nous avoir signaler ce compte</center>`
+            }
+        }
+        request.open("POST", "/fake");
+        request.send(formData);
+    }
     </script>
     <% if(login == user.login) { %>
         <script src='script/account.js'></script>
     <% } %>
 
     <div class="container">
-        <div id="main_div" class="jumbotron">
-            <% if (login !== user.login) { %>
-            <div class='row'>
-                <div class='col-sm-11'></div>
-                <div class='col-sm-1'><button id='bloque' onclick='bloque()' type="button" class="btn btn-secondary btn-sm" >Bloquer</button></div>
-            </div>
-            <% } %>
-                <center>
-                    <h3>
-                        <b><u><%= user.login %></u></b>
-                        <% if(login === user.login) { %>(Vous)<% } %>
-                        <% if(like === 'like me' || like === 'match') { %>(Vous like)<% } %>
-                    </h3>
-                        <% profil = null
-                        pic.forEach(function(val) {
-                            if (val.type == 'profil') {
-                                profil = val.name
-                            }
-                        }) %>
-                        <img id="picture_preview" height="200px" width="200px"
-                        <% if (profil) {%>
-                            src="picture/<%= profil %>"
+        <% if (fake) { %>
+            <div id="main_div" class="jumbotron"><center>Ce compte est signaler comme faux</center></div>
+        <% } else { %>
+            <div id="main_div" class="jumbotron">
+                <% if (login !== user.login) { %>
+                <div class='row'>
+                    <div class='col-sm-11'></div>
+                    <div class='col-sm-1'>
+                        <% if(bloque) { %>
+                            <button id='bloque' onclick='bloque()' type="button" class="btn btn-danger btn-sm">Bloquer</button>
                         <% } else { %>
-                            src="picture/default.jpg"
+                            <button id='bloque' onclick='bloque()' type="button" class="btn btn-secondary btn-sm">Bloquer</button>
                         <% } %>
-                        >
-                    <% if (login === user.login) { %>
-                        <div class='div_pic_mod' hidden>
-                            <input type="file" class="form-control-file" id="picture" aria-describedby="fileHelp">
-                        </div>
-                    <% } else if (pic.length > 0) { %>
-                    </br>
-                    </br>
-                        <% if(like === 'i like' || like === 'match') { %>
-                            <button id='like' onclick='like()' type="button" class="btn btn-success" style="width: 200px">♥</button>
-                        <% } else { %>
-                            <button id='like' onclick='like()' type="button" class="btn btn-secondary" style="width: 200px">♥</button>
-                        <% } %>
-                    <% } %>
-                </center>
-            <br/>
-            <div class="row">
-                <div class="col-sm-3">
-                    <div class="card">
-                        <div class="card-header">
-                            <%= user.login %>:
-                        </div>
-                        <div class="card-block">
-                            <blockquote id='div_info' class="card-blockquote">
-                                <ul class="list-unstyled">
-                                    <li><%= user.f_name %> <%= user.name %></li>
-                                    <li><%= user.gender %></li>
-                                    <li><% if (user.age) { %><%= user.age %> ans<% } %></li>
-                                    <li><%= user.orientation %></li>
-                                    </br>
-                                    <li>Score: <%= score %></li>
-                                </ul>
-                            </blockquote>
-                            <% if(login == user.login) { %>
-                                <blockquote id='div_info_mod' class="card-blockquote" hidden>
-                                    <label id="info_ok" hidden>Enregistrer<hr></label>
-                                    <div id="div_f_name" class="form-group">
-                                        <label>Nom</label>
-                                        <input type="text" class="form-control" id="f_name" value="<%= user.f_name %>" placeholder="Nom" maxlength="20">
-                                        <div id="f_name_err" class="form-control-feedback" hidden="hidden"></div>
-                                        <small id="f_name_err_mes" class="form-text text-muted" hidden="hidden"></small>
-                                    </div>
-                                    <div id="div_name" class="form-group">
-                                        <label>Prenom</label>
-                                        <input type="text" class="form-control" id="name" value="<%= user.name %>" placeholder="Prenom" maxlength="20">
-                                        <div id="name_err" class="form-control-feedback" hidden="hidden"></div>
-                                        <small id="name_err_mes" class="form-text text-muted" hidden="hidden"></small>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Sexe</label>
-                                        <select class="form-control" id="gender">
-                                            <option <% if (user.gender === '♂ Homme') { %>selected="selected"<% } %> >♂ Homme</option>
-                                            <option <% if (user.gender === '♀ Femme') { %>selected="selected"<% } %> >♀ Femme</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Age</label>
-                                        <input class="form-control" type="number" value="<%= user.age %>" min="16" max="120" id="age">
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Orientation</label>
-                                        <select class="form-control" id="orientation">
-                                            <option <% if (user.orientation === 'Heterosexuel') { %>selected="selected"<% } %> >Heterosexuel</option>
-                                            <option <% if (user.orientation === 'Gay / Lesbienne') { %>selected="selected"<% } %> >Gay / Lesbienne</option>
-                                            <option <% if (user.orientation === 'Bisexuel') { %>selected="selected"<% } %> >Bisexuel</option>
-                                        </select>
-                                    </div>
-                                    <button type="button" class="btn btn-primary" onclick="save_info()">Enregistrer</button>
-                                </blockquote>
-                            <% } %>
-                        </div>
-                    </div><br/>
-                    <div class="card">
-                        <div class="card-header">
-                            Centre d'interet
-                        </div>
-                        <div class="card-block">
-                            <blockquote id='div_tag' class="card-blockquote">
-                                <ul class="list-unstyled">
-                                    <% tag.forEach(function(val) { %>
-                                        <li><%= val.tag %></li>
-                                    <% }) %>
-                                </ul>
-                            </blockquote>
-                            <% if (login == user.login) { %>
-                                <blockquote id='div_tag_mod' class="card-blockquote" hidden>
-                                    <div id="add_tag_div" class="form-group">
-                                        <input type="text" class="form-control" id="add_tag" placeholder="#bg" maxlength="21">
-                                        <button type="submit" class="btn btn-primary" onclick="add_tag()">Ajouter</button>
-                                        <small class="form-text text-muted">Tag sans espace(ex: #bio, #geek, #piercing)</small>
-                                        <div id="add_tag_err" class="form-control-feedback" hidden="hidden">Erreur dans le tag</div>
-                                        <small id="add_tag_err_mes" class="form-text text-muted" hidden="hidden">Votre tag doit:<br/>- Commencer pas un #<br/>- Contenir uniquement des lettres et chiffres<br/>
-                                            - Posseder entre 1 et 20 caracteres (# non compris)</small>
-                                    </div><hr>
-                                    <div class="form-group">
-                                        <fieldset id="my_tag_dis" <% if (!tag[0]) { %>disabled<% } %> >
-                                             <select class="form-control" id="my_tag">
-                                                 <% if (!tag[0]) { %><option>Aucun centre d'interet</option><% }
-                                                 else {
-                                                     tag.forEach((val) => {
-                                                         %><option><%= val.tag %></option><%
-                                                     })
-                                                 } %>
-                                            </select>
-                                        </fieldset>
-                                        <button type="submit" class="btn btn-primary" onclick="del_tag()">Retirer</button>
-                                    </div>
-                                </blockquote>
-                            <% } %>
-                        </div>
-                    </div><br/>
+                    </div>
                 </div>
-                <div class="col-sm-9">
-                    <% if(login == user.login) { %>
-                        <div id='div_priv' class="card" hidden>
+                <% } %>
+                    <center>
+                        <h3>
+                            <b><u><%= user.login %></u></b>
+                            <% if(login === user.login) { %>(Vous)<% } %>
+                            <% if(like === 'like me' || like === 'match') { %>(Vous like)<% } %>
+                        </h3>
+                            <% profil = null
+                            pic.forEach(function(val) {
+                                if (val.type == 'profil') {
+                                    profil = val.name
+                                }
+                            }) %>
+                            <img id="picture_preview" height="200px" width="200px"
+                            <% if (profil) {%>
+                                src="picture/<%= profil %>"
+                            <% } else { %>
+                                src="picture/default.jpg"
+                            <% } %>
+                            >
+                        <% if (login === user.login) { %>
+                            <div class='div_pic_mod' hidden>
+                                <input type="file" class="form-control-file" id="picture" aria-describedby="fileHelp">
+                            </div>
+                        <% } else if (pic.length > 0) { %>
+                        </br>
+                        </br>
+                            <% if(like === 'i like' || like === 'match') { %>
+                                <button id='like' onclick='like()' type="button" class="btn btn-success" style="width: 200px" <% if(bloque) { %>hidden<% } %>>♥</button>
+                            <% } else { %>
+                                <button id='like' onclick='like()' type="button" class="btn btn-secondary" style="width: 200px" <% if(bloque) { %>hidden<% } %>>♥</button>
+                            <% } %>
+                        <% } %>
+                    </center>
+                <br/>
+                <div class="row">
+                    <div class="col-sm-3">
+                        <div class="card">
                             <div class="card-header">
-                                Information privee (visible seulement par vous)
+                                <%= user.login %>:
+                            </div>
+                            <div class="card-block">
+                                <blockquote id='div_info' class="card-blockquote">
+                                    <ul class="list-unstyled">
+                                        <li><%= user.f_name %> <%= user.name %></li>
+                                        <li><%= user.gender %></li>
+                                        <li><% if (user.age) { %><%= user.age %> ans<% } %></li>
+                                        <li><%= user.orientation %></li>
+                                        </br>
+                                        <li>Score: <%= score %></li>
+                                    </ul>
+                                </blockquote>
+                                <% if(login == user.login) { %>
+                                    <blockquote id='div_info_mod' class="card-blockquote" hidden>
+                                        <label id="info_ok" hidden>Enregistrer<hr></label>
+                                        <div id="div_f_name" class="form-group">
+                                            <label>Nom</label>
+                                            <input type="text" class="form-control" id="f_name" value="<%= user.f_name %>" placeholder="Nom" maxlength="20">
+                                            <div id="f_name_err" class="form-control-feedback" hidden="hidden"></div>
+                                            <small id="f_name_err_mes" class="form-text text-muted" hidden="hidden"></small>
+                                        </div>
+                                        <div id="div_name" class="form-group">
+                                            <label>Prenom</label>
+                                            <input type="text" class="form-control" id="name" value="<%= user.name %>" placeholder="Prenom" maxlength="20">
+                                            <div id="name_err" class="form-control-feedback" hidden="hidden"></div>
+                                            <small id="name_err_mes" class="form-text text-muted" hidden="hidden"></small>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Sexe</label>
+                                            <select class="form-control" id="gender">
+                                                <option <% if (user.gender === '♂ Homme') { %>selected="selected"<% } %> >♂ Homme</option>
+                                                <option <% if (user.gender === '♀ Femme') { %>selected="selected"<% } %> >♀ Femme</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Age</label>
+                                            <input class="form-control" type="number" value="<%= user.age %>" min="16" max="120" id="age">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Orientation</label>
+                                            <select class="form-control" id="orientation">
+                                                <option <% if (user.orientation === 'Heterosexuel') { %>selected="selected"<% } %> >Heterosexuel</option>
+                                                <option <% if (user.orientation === 'Gay / Lesbienne') { %>selected="selected"<% } %> >Gay / Lesbienne</option>
+                                                <option <% if (user.orientation === 'Bisexuel') { %>selected="selected"<% } %> >Bisexuel</option>
+                                            </select>
+                                        </div>
+                                        <button type="button" class="btn btn-primary" onclick="save_info()">Enregistrer</button>
+                                    </blockquote>
+                                <% } %>
+                            </div>
+                        </div><br/>
+                        <div class="card">
+                            <div class="card-header">
+                                Centre d'interet
+                            </div>
+                            <div class="card-block">
+                                <blockquote id='div_tag' class="card-blockquote">
+                                    <ul class="list-unstyled">
+                                        <% tag.forEach(function(val) { %>
+                                            <li><%= val.tag %></li>
+                                        <% }) %>
+                                    </ul>
+                                </blockquote>
+                                <% if (login == user.login) { %>
+                                    <blockquote id='div_tag_mod' class="card-blockquote" hidden>
+                                        <div id="add_tag_div" class="form-group">
+                                            <input type="text" class="form-control" id="add_tag" placeholder="#bg" maxlength="21">
+                                            <button type="submit" class="btn btn-primary" onclick="add_tag()">Ajouter</button>
+                                            <small class="form-text text-muted">Tag sans espace(ex: #bio, #geek, #piercing)</small>
+                                            <div id="add_tag_err" class="form-control-feedback" hidden="hidden">Erreur dans le tag</div>
+                                            <small id="add_tag_err_mes" class="form-text text-muted" hidden="hidden">Votre tag doit:<br/>- Commencer pas un #<br/>- Contenir uniquement des lettres et chiffres<br/>
+                                                - Posseder entre 1 et 20 caracteres (# non compris)</small>
+                                        </div><hr>
+                                        <div class="form-group">
+                                            <fieldset id="my_tag_dis" <% if (!tag[0]) { %>disabled<% } %> >
+                                                 <select class="form-control" id="my_tag">
+                                                     <% if (!tag[0]) { %><option>Aucun centre d'interet</option><% }
+                                                     else {
+                                                         tag.forEach((val) => {
+                                                             %><option><%= val.tag %></option><%
+                                                         })
+                                                     } %>
+                                                </select>
+                                            </fieldset>
+                                            <button type="submit" class="btn btn-primary" onclick="del_tag()">Retirer</button>
+                                        </div>
+                                    </blockquote>
+                                <% } %>
+                            </div>
+                        </div><br/>
+                    </div>
+                    <div class="col-sm-9">
+                        <% if(login == user.login) { %>
+                            <div id='div_priv' class="card" hidden>
+                                <div class="card-header">
+                                    Information privee (visible seulement par vous)
+                                </div>
+                                <div class="card-block">
+                                    <blockquote class="card-blockquote">
+                                        <label id="mail_ok" hidden>Enregistrer<hr></label>
+                                        <div id ='div_mail' class="form-group row">
+                                            <label class="col-sm-2 col-form-label">Adresse mail</label>
+                                            <div class="col-sm-10">
+                                                <input type="email" class="form-control" id="mail" placeholder="Mail" value="<%= user.mail %>">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div id="mail_err" class="form-control-feedback" hidden="hidden"></div>
+                                            <small id="mail_err_mes" class="form-text text-muted" hidden="hidden"></small>
+                                            <script>document.getElementById('mail').addEventListener('change', mail_check);</script>
+                                            <button type="button" class="btn btn-primary" onclick="save_mail()">Modifier adresse mail</button>
+                                        </div>
+                                        <hr>
+                                        <label id="pass_ok" hidden>Enregistrer<hr></label>
+                                        <div id="div_old_pass" class="form-group">
+                                            <label >Mot de passe actuel</label>
+                                            <input type="password" class="form-control" id="old_pass" placeholder="Mot de passe actuel">
+                                            <div id="old_pass_err" class="form-control-feedback" hidden="hidden">Mauvais mot de passe</div>
+                                            <script>document.getElementById('old_pass').addEventListener('change', reset_pass);</script>
+                                        </div>
+                                        <div id="div_pass" class="form-group">
+                                            <label >Nouveau mot de passe</label>
+                                            <input type="password" class="form-control" id="pass" placeholder="Nouveau mot de passe">
+                                            <div id="pass_err" class="form-control-feedback" hidden="hidden">Mot de passe trop simple</div>
+                                            <small id="pass_err_mes" class="form-text text-muted" hidden="hidden">Votre mot de passe doit contenir au moins:<br/>
+                                                - 1 lettre minuscule<br/>
+                                                - 1 lettre majuscule<br/>
+                                                - 1 chiffre<br/>
+                                                - 8 caracteres<br/>
+                                                - Pas de caractere special</small>
+                                            <script>document.getElementById('pass').addEventListener('change', pass_check);</script>
+                                        </div>
+                                        <div id="div_pass_confirm" class="form-group">
+                                            <label>Nouveau mot de passe (confirmation)</label>
+                                            <input type="password" class="form-control" id="pass_confirm" placeholder="Nouveau mot de passe">
+                                            <div id="pass_confirm_err" class="form-control-feedback" hidden="hidden">Les deux mots sont differents</div>
+                                            <small id="pass_confirm_err_mes" class="form-text text-muted" hidden="hidden">Entrez le meme mot de passe</small>
+                                            <script>document.getElementById('pass_confirm').addEventListener('change', pass_confirm_check);</script>
+                                        </div>
+                                        <button type="button" class="btn btn-primary" onclick="save_pass()">Modifier mot de passe</button>
+                                    </blockquote>
+                                </div>
+                            </div><div id='br' hidden><br/></div>
+                        <% } %>
+                        <div class="card">
+                            <div class="card-header">
+                                Biographie
+                            </div>
+                            <div class="card-block">
+                                <blockquote id='div_bio' class="card-blockquote">
+                                    <%= user.bio %>
+                                </blockquote>
+                                <% if(login == user.login) { %>
+                                    <blockquote id='div_bio_mod' class="card-blockquote" hidden>
+                                        <div id="bio_div" class="form-group">
+                                            <label id="bio_ok" hidden>Enregistrer<hr></label>
+                                            <textarea class="form-control" id="bio" rows="3" ><%= user.bio %></textarea>
+                                            <div class="row">
+                                                <div class="col-10"></div>
+                                                <div class="col-2">
+                                                    <small class="form-text text-muted">Restant: <span id="bio_count">500</span></small>
+                                                </div>
+                                            </div>
+                                            <div id="bio_err" class="form-control-feedback" hidden="hidden">Caracteres speciaux interdit</div>
+                                            <button type="button" class="btn btn-primary" onclick="save_bio()">Enregistrer</button>
+                                        </div>
+                                    </blockquote>
+                                <% } %>
+                            </div>
+                        </div><br/>
+                        <div class="card">
+                            <div class="card-header">
+                                Photos
                             </div>
                             <div class="card-block">
                                 <blockquote class="card-blockquote">
-                                    <label id="mail_ok" hidden>Enregistrer<hr></label>
-                                    <div id ='div_mail' class="form-group row">
-                                        <label class="col-sm-2 col-form-label">Adresse mail</label>
-                                        <div class="col-sm-10">
-                                            <input type="email" class="form-control" id="mail" placeholder="Mail" value="<%= user.mail %>">
+                                    <div id='draw_pic'></div>
+                                    <script>document.getElementById('draw_pic').innerHTML = draw_pic(true);</script>
+                                    <% if (login === user.login) { %>
+                                        <div id='div_pic2' hidden>
+                                            <hr>
+                                            <input type="file" class="form-control-file" id="picture2" aria-describedby="fileHelp">
                                         </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div id="mail_err" class="form-control-feedback" hidden="hidden"></div>
-                                        <small id="mail_err_mes" class="form-text text-muted" hidden="hidden"></small>
-                                        <script>document.getElementById('mail').addEventListener('change', mail_check);</script>
-                                        <button type="button" class="btn btn-primary" onclick="save_mail()">Modifier adresse mail</button>
-                                    </div>
-                                    <hr>
-                                    <label id="pass_ok" hidden>Enregistrer<hr></label>
-                                    <div id="div_old_pass" class="form-group">
-                                        <label >Mot de passe actuel</label>
-                                        <input type="password" class="form-control" id="old_pass" placeholder="Mot de passe actuel">
-                                        <div id="old_pass_err" class="form-control-feedback" hidden="hidden">Mauvais mot de passe</div>
-                                        <script>document.getElementById('old_pass').addEventListener('change', reset_pass);</script>
-                                    </div>
-                                    <div id="div_pass" class="form-group">
-                                        <label >Nouveau mot de passe</label>
-                                        <input type="password" class="form-control" id="pass" placeholder="Nouveau mot de passe">
-                                        <div id="pass_err" class="form-control-feedback" hidden="hidden">Mot de passe trop simple</div>
-                                        <small id="pass_err_mes" class="form-text text-muted" hidden="hidden">Votre mot de passe doit contenir au moins:<br/>
-                                            - 1 lettre minuscule<br/>
-                                            - 1 lettre majuscule<br/>
-                                            - 1 chiffre<br/>
-                                            - 8 caracteres<br/>
-                                            - Pas de caractere special</small>
-                                        <script>document.getElementById('pass').addEventListener('change', pass_check);</script>
-                                    </div>
-                                    <div id="div_pass_confirm" class="form-group">
-                                        <label>Nouveau mot de passe (confirmation)</label>
-                                        <input type="password" class="form-control" id="pass_confirm" placeholder="Nouveau mot de passe">
-                                        <div id="pass_confirm_err" class="form-control-feedback" hidden="hidden">Les deux mots sont differents</div>
-                                        <small id="pass_confirm_err_mes" class="form-text text-muted" hidden="hidden">Entrez le meme mot de passe</small>
-                                        <script>document.getElementById('pass_confirm').addEventListener('change', pass_confirm_check);</script>
-                                    </div>
-                                    <button type="button" class="btn btn-primary" onclick="save_pass()">Modifier mot de passe</button>
+                                    <% } %>
                                 </blockquote>
                             </div>
-                        </div><div id='br' hidden><br/></div>
-                    <% } %>
-                    <div class="card">
-                        <div class="card-header">
-                            Biographie
-                        </div>
-                        <div class="card-block">
-                            <blockquote id='div_bio' class="card-blockquote">
-                                <%= user.bio %>
-                            </blockquote>
-                            <% if(login == user.login) { %>
-                                <blockquote id='div_bio_mod' class="card-blockquote" hidden>
-                                    <div id="bio_div" class="form-group">
-                                        <label id="bio_ok" hidden>Enregistrer<hr></label>
-                                        <textarea class="form-control" id="bio" rows="3" ><%= user.bio %></textarea>
-                                        <div class="row">
-                                            <div class="col-10"></div>
-                                            <div class="col-2">
-                                                <small class="form-text text-muted">Restant: <span id="bio_count">500</span></small>
-                                            </div>
-                                        </div>
-                                        <div id="bio_err" class="form-control-feedback" hidden="hidden">Caracteres speciaux interdit</div>
-                                        <button type="button" class="btn btn-primary" onclick="save_bio()">Enregistrer</button>
-                                    </div>
-                                </blockquote>
-                            <% } %>
-                        </div>
-                    </div><br/>
-                    <div class="card">
-                        <div class="card-header">
-                            Photos
-                        </div>
-                        <div class="card-block">
-                            <blockquote class="card-blockquote">
-                                <div id='draw_pic'></div>
-                                <script>document.getElementById('draw_pic').innerHTML = draw_pic(true);</script>
-                                <% if (login === user.login) { %>
-                                    <div id='div_pic2' hidden>
-                                        <hr>
-                                        <input type="file" class="form-control-file" id="picture2" aria-describedby="fileHelp">
-                                    </div>
-                                <% } %>
-                            </blockquote>
-                        </div>
-                    </div><br/>
+                        </div><br/>
+                    </div>
                 </div>
+                <center>
+                    <% if(login == user.login) { %>
+                        <button id="main_button" type="button" class="btn btn-secondary" onclick="modif()">Modifier mes informations</button>
+                    <% } %><br/>
+                    <small id='main_small' class="form-text text-muted"></small>
+                </center>
+                <% if (login !== user.login) { %>
+                <div class='row'>
+                    <div class='col-sm-10'></div>
+                    <div class='col-sm-2'>
+                            <button onclick='fake()' type="button" class="btn btn-secondary btn-sm">Signaler faux compte</button>
+                    </div>
+                </div>
+                <% } %>
             </div>
-            <center><% if(login == user.login) { %><button id="main_button" type="button" class="btn btn-secondary" onclick="modif()">Modifier mes informations</button><% } %><br/>
-                <small id='main_small' class="form-text text-muted"></small></center>
-        </div>
+        <% } %>
     </div>
 
     <footer>

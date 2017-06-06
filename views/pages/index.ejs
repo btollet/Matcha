@@ -33,6 +33,9 @@
 
     <div class="container">
         <div id="div_main" class="jumbotron">
+            <% if(mes) { %>
+                <center><%= mes %></center>
+            <% } %>
             <center><span id='err_mess'></span></center>
             <h2>Connexion</h2>
             <div class="form-group row">

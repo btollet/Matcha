@@ -33,6 +33,7 @@ let profil_js = require('./include/profil')
 let notif_js = require('./include/notif')
 let like_js = require('./include/like.js')
 let wall_js = require('./include/wall.js')
+let bloque_js = require('./include/bloque.js')
 
 
 app.use(session({secret: 'podl5amc-daso12w' }))
@@ -60,7 +61,7 @@ app.get('/', (req, res) => {
 
 app.get('/deco', (req, res) => {
     req.session.destroy()
-    res.render('pages/index', { page: 'accueil', login: null})
+    res.render('pages/index', { page: 'accueil', login: null, mes: null })
 })
 
 app.get('/register', (req, res) => {
@@ -140,8 +141,20 @@ app.post('/notif_see', (req, res) => {
     notif_js.my_notif_see(bdd, res, req.session)
 })
 
+app.post('/notif_del', (req, res) => {
+    notif_js.my_notif_del(bdd, res, req.session)
+})
+
 app.post('/like', upload.fields([]), (req, res) => {
     like_js.like(req.body.name, bdd, res, req.session, notif)
+})
+
+app.post('/bloque', upload.fields([]), (req, res) => {
+    bloque_js.bloque(req.body.name, bdd, res, req.session, notif)
+})
+
+app.post('/fake', upload.fields([]), (req, res) => {
+    bloque_js.fake(req.body.name, bdd, res, req.session, notif)
 })
 
 app.post('/search', upload.fields([]), (req, res) => {

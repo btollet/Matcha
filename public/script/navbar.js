@@ -34,7 +34,7 @@ function check_notif() {
             if (rep !== 'Aucune notification') {
                 let notif_json = JSON.parse(rep)
                 let count = 0
-                let result = ''
+                let result = `<img src='icon/trash.png' width='32' height='32' onclick='trash()'>`
 
                 notif_json.forEach((val) => {
                     if (!val.vue)
@@ -52,6 +52,18 @@ function check_notif() {
         }
     }
     request.open("POST", "/notif")
+    request.send()
+}
+
+function trash() {
+    let request = new XMLHttpRequest()
+    request.onload = () => {
+        if (request.readyState == 4 && request.status === 200) {
+            if (request.responseText == 'ok')
+                document.getElementById('my_notif').innerHTML = 'Aucune notification'
+        }
+    }
+    request.open("POST", "/notif_del")
     request.send()
 }
 
