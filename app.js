@@ -34,6 +34,7 @@ let notif_js = require('./include/notif')
 let like_js = require('./include/like.js')
 let wall_js = require('./include/wall.js')
 let bloque_js = require('./include/bloque.js')
+let chat_js = require('./include/chat.js')
 
 
 app.use(session({secret: 'podl5amc-daso12w' }))
@@ -49,10 +50,16 @@ app.set('view engine', 'ejs')
 app.set("trust proxy", true)
 //--- Socket io
 var notif = io
-  .of('/notif')
-  .on('connection', function (socket) {
+.of('/notif')
+.on('connection', function (socket) {
     socket.emit()
-  })
+})
+
+var chat = io
+.of('/chat')
+.on('connection', function (socket) {
+    socket.emit()
+})
 
 //--- App.get
 app.get('/', (req, res) => {
@@ -167,6 +174,14 @@ app.post('/fake', upload.fields([]), (req, res) => {
 
 app.post('/search', upload.fields([]), (req, res) => {
     wall_js.option(req.body, bdd, res, req.session)
+})
+
+app.post('/new_mes', upload.fields([]), (req, res) => {
+    chat_js.new_mes(req.body, bdd, res, req.session, notif, chat)
+})
+
+app.post('/chat_load', upload.fields([]), (req, res) => {
+    chat_js.chat_load(req.body.login, bdd, res, req.session)
 })
 
 //--- Async
