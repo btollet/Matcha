@@ -14,7 +14,7 @@ function draw_table() {
         <li class="nav-item">
         <span id="${val[0]}" class="nav-link" onclick="chat_with('${val[0]}')"><h5>${val[0]}</h5></span>
         </li>`
-        user_info[val[0]] = { pic: pic, gender: val[1].gender, score: val[1].score}
+        user_info[val[0]] = { pic: pic, gender: val[1].gender, score: val[1].score, last_visit: val[1].last_visit }
     })
     document.getElementById('table').innerHTML = result
 
@@ -22,6 +22,20 @@ function draw_table() {
     chat_with(user_default)
     if (!actual_chat && users[0])
     chat_with(users[0][0])
+}
+
+function set_date(date) {
+    let user_date = ''
+
+    if (date) {
+        function pad(s) { return (s < 10) ? '0' + s : s }
+        var d = new Date(date)
+        if (date >= Date.now() - 10000)
+        user_date = 'Connecter'
+        else
+        user_date = `Derniere connection:</br>${pad(d.getDate())}/${pad(d.getMonth()+1)}/${pad(d.getFullYear())} ${pad(d.getHours())}:${pad(d.getMinutes())}`
+    }
+    return (user_date)
 }
 
 function chat_with(login) {
@@ -34,6 +48,9 @@ function chat_with(login) {
         document.getElementById(login).setAttribute('class', 'nav-link active')
         actual_chat = login
         info_div.removeAttribute('hidden')
+
+        let user_date = set_date(user_info[login].last_visit)
+
         info_div.innerHTML =
         `<h3 class="card-header">${login}</h3>
         <div class="card-block">
@@ -41,7 +58,8 @@ function chat_with(login) {
         <img src='picture/${user_info[login].pic}' style=' width: 100%; max-width: 200px;'></br></br>
         ${login}</br>
         ${user_info[login].gender}</br>
-        Score: ${user_info[login].score}</br></br>
+        Score: ${user_info[login].score}</br>
+        <span id='date'>${user_date}</span></br></br>
         <a href='account?login=${login}'>Profil</a>
         </center>
         </div>`
@@ -144,6 +162,28 @@ function load_chat() {
     request.open("POST", "/chat_load")
     request.send(formData)
 }
+
+function last() {
+    if (actual_chat) {
+        let save = actual_chat
+
+        let formData = new FormData()
+        formData.append('login', save)
+        let request = new XMLHttpRequest()
+        request.onload = () => {
+            if (request.readyState == 4 && request.status == 200) {
+                rep = request.responseText
+                if (rep !== 'error') {
+                    user_info[save].last_visit = JSON.parse(rep)
+                    document.getElementById('date').innerHTML = set_date(user_info[save].last_visit)
+                }
+            }
+        }
+        request.open("POST", "/last_visit")
+        request.send(formData)
+    }
+}
+window.setInterval(last, 5000);
 
 //--- Socket
 var chat = io.connect('http://localhost:3000/chat');

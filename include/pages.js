@@ -99,10 +99,15 @@ async function account(name, bdd, res, sess, user, notif) {
             let mes = `<a href="account?login=${sess.login}">${sess.login}</a> a visiter votre profil`
             notif_js.send_notif(info.login, mes, bdd, sess, notif)
 
-            info.mail = null
+            delete info.mail
             if (info.fake >= 10)
             fake = true;
         }
+        delete info.pass
+        delete info._id
+        delete info.fake
+        delete info.pref
+        delete info.first_form
 
         res.render('pages/' + name, {
             page: name,

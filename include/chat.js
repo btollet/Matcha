@@ -12,6 +12,10 @@ module.exports = {
 
     chat_load: (login, bdd, res, sess) => {
         load(login, bdd, res, sess)
+    },
+
+    last_visit: (login, bdd, res, sess) => {
+        last(login, bdd, res, sess)
     }
 }
 
@@ -47,4 +51,17 @@ async function load(login, bdd, res, sess) {
         result = await mes.sort((a, b) => a.date - b.date )
     }
     res.json(result)
+}
+
+async function last(login, bdd, res, sess) {
+    let user = await bdd.collection('users').findOne({ login: login })
+
+    if (user) {
+        if (user.last_visit)
+        res.json(user.last_visit)
+        else
+        res.end('error')
+    }
+    else
+        res.end('error')
 }

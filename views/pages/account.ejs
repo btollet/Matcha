@@ -146,6 +146,8 @@
                             <% } else { %>
                                 <button id='like' onclick='like()' type="button" class="btn btn-secondary" style="width: 200px" <% if(bloque) { %>hidden<% } %>>♥</button>
                             <% } %>
+                        <% } else { %>
+                            <p>Ne peu pas etre like sans photo</p>
                         <% } %>
                     </center>
                 <br/>
@@ -163,7 +165,19 @@
                                         <li><% if (user.age) { %><%= user.age %> ans<% } %></li>
                                         <li><%= user.orientation %></li>
                                         </br>
-                                        <li>Score: <%= score %></li>
+                                        <li>Score: <%= score %></li></br>
+                                        <% if (user.last_visit) { %>
+                                            <li><span id='date'>Derniere connexion: </span></li>
+                                            <script>
+                                                let date = <%- user.last_visit %>
+                                                function pad(s) { return (s < 10) ? '0' + s : s }
+                                                var d = new Date(date)
+                                                if (date >= Date.now() - 10000)
+                                                document.getElementById('date').innerHTML = 'Connecter'
+                                                else
+                                                document.getElementById('date').innerHTML += `${pad(d.getDate())}/${pad(d.getMonth()+1)}/${pad(d.getFullYear())} ${pad(d.getHours())}:${pad(d.getMinutes())}`
+                                            </script>
+                                        <% } %>
                                     </ul>
                                 </blockquote>
                                 <% if(login == user.login) { %>

@@ -190,12 +190,21 @@ app.post('/chat_load', upload.fields([]), (req, res) => {
     chat_js.chat_load(req.body.login, bdd, res, req.session)
 })
 
+app.post('/last_visit', upload.fields([]), (req, res) => {
+    chat_js.last_visit(req.body.login, bdd, res, req.session)
+})
+
 app.post('/mail_pass', upload.fields([]), (req, res) => {
     mail_js.pass(req.body.login, bdd, res)
 })
 
 app.post('/new_pass', upload.fields([]), (req, res) => {
     profil_js.pass_reini(req.body, bdd, res)
+})
+
+app.post('/ping', (req, res) => {
+    bdd.collection('users').update({ login: req.session.login}, { $set: { last_visit: Date.now() }})
+    res.send('pong')
 })
 
 //--- Async
@@ -207,6 +216,5 @@ async function nb_picture(cb) {
     else
     cb(null, true)
 }
-
 
 server.listen(3000, '127.0.0.1')

@@ -35,6 +35,7 @@ async function my_match(bdd, res, sess, user_login) {
                         result[val.like] = {
                             gender: user_info.gender,
                             pic: pic,
+                            last_visit: user_info.last_visit,
                             score: score
                         }
                     }

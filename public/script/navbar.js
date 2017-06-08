@@ -3,6 +3,15 @@ window.onclick = function(event) {
     drop.setAttribute('class', 'nav-item dropdown')
 }
 
+function ping() {
+    let request = new XMLHttpRequest()
+    request.onload = () => {}
+    request.open("POST", "/ping")
+    request.send()
+}
+ping()
+window.setInterval(ping, 5000);
+
 function dropdown() {
     let drop = document.getElementById('drop')
     let num = document.getElementById('notif_num')
@@ -15,7 +24,7 @@ function dropdown() {
     request.onload = () => {
         if (request.readyState == 4 && request.status == 200) {
             if (request.responseText === 'ok')
-                num.innerHTML = null
+            num.innerHTML = null
         }
     }
     request.open("POST", "/notif_see")
@@ -60,7 +69,7 @@ function trash() {
     request.onload = () => {
         if (request.readyState == 4 && request.status === 200) {
             if (request.responseText == 'ok')
-                document.getElementById('my_notif').innerHTML = 'Aucune notification'
+            document.getElementById('my_notif').innerHTML = 'Aucune notification'
         }
     }
     request.open("POST", "/notif_del")
