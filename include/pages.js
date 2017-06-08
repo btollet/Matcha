@@ -7,6 +7,8 @@ module.exports = {
         if (!sess.login) {
             if (name === 'register')
             res.render('pages/register', { page: 'register', login: null})
+            else if (name === 'new_pass')
+            new_pass(name, bdd, res, user)
             else
             res.render('pages/index', { page: 'accueil', login: null, mes: null})
         }
@@ -22,7 +24,7 @@ module.exports = {
                 account(name, bdd, res, sess, sess.login, notif)
             }
             else if (name === 'match')
-            match_js.match(bdd, res, sess)
+            match_js.match(bdd, res, sess, user)
             else if (name === 'historique')
             normal_page(name, res, sess)
             else
@@ -32,6 +34,17 @@ module.exports = {
 }
 
 //--- async
+async function new_pass(name, bdd, res, user) {
+    let valid = false
+    let regex = new RegExp(["^", user.login, "$"].join(""), "i")
+    let check_entry = await bdd.collection('mail_reset').findOne({ login: regex, key: user.key })
+
+    if (check_entry)
+    valid = true
+
+    res.render('pages/' + name, { page: name, login: null, valid: valid, pass_login: user.login, pass_key: user.key })
+}
+
 async function normal_page(name, res, sess) {
     res.render('pages/' + name, { page: name, login: sess.login})
 }

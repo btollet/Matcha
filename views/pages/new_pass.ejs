@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <% include ../partials/head %>
+</head>
+
+<body>
+
+    <header>
+        <% include ../partials/header %>
+    </header>
+    <% if (valid) { %>
+        <script>
+            <% if (pass_login && pass_key) { %>
+                let pass_login = '<%- pass_login %>'
+                let pass_key = '<%- pass_key %>'
+            <% } %>
+        </script>
+        <script src="script/new_pass.js"></script>
+
+        <div class="container">
+            <div id="div_main" class="jumbotron">
+                <h2>Nouveau mot de passe</h2>
+                <div id="div_pass" class="form-group">
+                    <label >Mot de passe</label>
+                    <input type="password" class="form-control" id="pass" placeholder="Mot de passe">
+                    <div id="pass_err" class="form-control-feedback" hidden="hidden">Mot de passe trop simple</div>
+                    <small id="pass_err_mes" class="form-text text-muted" hidden="hidden">Votre mot de passe doit contenir au moins:<br/>
+                        - 1 lettre minuscule<br/>
+                        - 1 lettre majuscule<br/>
+                        - 1 chiffre<br/>
+                        - 8 caracteres<br/>
+                        - Pas de caractere special</small>
+                    <script>document.getElementById('pass').addEventListener('change', pass_check);</script>
+                </div>
+                <div id="div_pass_confirm" class="form-group">
+                    <label>Mot de passe (confirmation)</label>
+                    <input type="password" class="form-control" id="pass_confirm" placeholder="Mot de passe">
+                    <div id="pass_confirm_err" class="form-control-feedback" hidden="hidden">Les deux mots sont differents</div>
+                    <small id="pass_confirm_err_mes" class="form-text text-muted" hidden="hidden">Entrez le meme mot de passe</small>
+                    <script>document.getElementById('pass_confirm').addEventListener('change', pass_confirm_check);</script>
+                </div>
+                <button type="submit" class="btn btn-primary" onclick="save_pass()">Valider</button>
+            </div>
+        </div>
+    <% } else { %>
+        <div class="container">
+            <div id="div_main" class="jumbotron"><center>Lien invalide</center></div>
+        </div>
+    <% } %>
+
+    <footer>
+        <% include ../partials/footer %>
+    </footer>
+
+</body>
+
+</html>

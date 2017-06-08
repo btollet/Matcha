@@ -153,6 +153,11 @@ function bio_count () {
 
     document.getElementById('bio_ok').setAttribute('hidden', 'hidden');
     count.innerHTML = 500 - bio.value.length;
+    count.innerHTML = 500 - bio.value.length;
+    if (count.innerHTML >= 0)
+        count.style.color = ''
+    else
+        count.style.color = "red"
     if (regex.test(bio.value)) {
         div.setAttribute('class', 'form-group has-success');
         bio_err.setAttribute('hidden', 'hidden');

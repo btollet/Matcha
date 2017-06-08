@@ -2,6 +2,7 @@ var express = require('express')
 var multer = require('multer')
 var MongoClient = require('mongodb').MongoClient
 var session = require('express-session')
+var sendmail = require('sendmail')()
 const path = require('path')
 
 var upload = multer({
@@ -35,6 +36,7 @@ let like_js = require('./include/like.js')
 let wall_js = require('./include/wall.js')
 let bloque_js = require('./include/bloque.js')
 let chat_js = require('./include/chat.js')
+let mail_js = require('./include/mail.js')
 
 
 app.use(session({secret: 'podl5amc-daso12w' }))
@@ -81,11 +83,15 @@ app.get('/account', (req, res) => {
 })
 
 app.get('/match', (req, res) => {
-    page_js.call_page('match', bdd, res, req.session, null, notif)
+    page_js.call_page('match', bdd, res, req.session, req.query.login, notif)
 })
 
 app.get('/historique', (req, res) => {
     page_js.call_page('historique', bdd, res, req.session, null, notif)
+})
+
+app.get('/new_pass', (req, res) => {
+    page_js.call_page('new_pass', bdd, res, req.session, req.query, notif)
 })
 
 
@@ -182,6 +188,14 @@ app.post('/new_mes', upload.fields([]), (req, res) => {
 
 app.post('/chat_load', upload.fields([]), (req, res) => {
     chat_js.chat_load(req.body.login, bdd, res, req.session)
+})
+
+app.post('/mail_pass', upload.fields([]), (req, res) => {
+    mail_js.pass(req.body.login, bdd, res)
+})
+
+app.post('/new_pass', upload.fields([]), (req, res) => {
+    profil_js.pass_reini(req.body, bdd, res)
 })
 
 //--- Async

@@ -13,6 +13,10 @@
 
     <script>
     let users = <%- JSON.stringify(users) %>
+    let user_default
+    <% if(default_user) { %>
+        user_default = <%- JSON.stringify(default_user) %>
+    <% } %>
     </script>
     <script src='script/match.js'></script>
 
@@ -20,7 +24,7 @@
         <div id="div_main" class="jumbotron">
             <div style='overflow: auto; max-height: 100px; width: 100%'>
                 <ul id='table' class="nav nav-tabs">
-                    <script>draw_table()</script>
+
                 </ul>
             </div></br>
             <div class="row">
@@ -32,11 +36,15 @@
                     <div id='chat' class="card" hidden>
                         <h3 class="card-header">Messages</h3>
                         <div class="card-block">
-                            <div id='message' class='col-12' style='overflow: auto; max-height: 1000px;'></div>
+                            <div id='message' class='col-12' style='overflow: auto; max-height: 900px;'></div>
                             <hr>
                             <div class="row">
                                 <div class="col-sm-9">
-                                    <input id='new_mes' class="form-control" type="text">
+                                    <div id="div_send" class="form-group">
+                                        <input id='new_mes' class="form-control" type="text" maxlength="500">
+                                        <small id='send_err' class="form-text text-muted" hidden>Caracteres speciaux interdits</small>
+                                    </div>
+                                    <script>document.getElementById('new_mes').onkeyup = mes_verif;</script>
                                 </div>
                                 <div class="col-sm-3">
                                     <center><button type="button" class="btn btn-primary" onclick="send_mes()">Envoyer</button></center>
@@ -44,6 +52,7 @@
                             </div>
                         </div>
                     </div>
+                    <script>draw_table()</script>
                 </div>
             </div>
         </div>

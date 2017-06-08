@@ -12,7 +12,7 @@ function draw_table() {
             result += `
             <tr>
             <th style="vertical-align:middle; text-align:center">
-            <img height="200px" width="200px" src='picture/${pic}'>
+            <img src='picture/${pic}' style=' width: 100%; max-width: 200px;'>
             </th>
             <th style="vertical-align:middle; text-align:center">${val[0]}</br>${val[1].gender}</th>
             <th style="vertical-align:middle; text-align:center">${val[1].age}</th>

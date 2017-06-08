@@ -1,11 +1,11 @@
 module.exports = {
-    match: (bdd, res, sess) => {
-        my_match(bdd, res, sess)
+    match: (bdd, res, sess, user) => {
+        my_match(bdd, res, sess, user)
     }
 }
 
 //--- async
-async function my_match(bdd, res, sess) {
+async function my_match(bdd, res, sess, user_login) {
     let fake = await bdd.collection('users').findOne({ login: sess.login, fake: { $gte: 10 } })
 
     if (fake) {
@@ -41,13 +41,15 @@ async function my_match(bdd, res, sess) {
                 }
             }
         }))
-
+        if (user_login && !result[user_login])
+            user_login = null;
         //-- To array
         let to_array = []
         for (var login in result) {
             to_array.push([login, result[login]])
         }
+        to_array.sort()
 
-        res.render('pages/match', { page: 'match', login: sess.login, users: to_array })
+        res.render('pages/match', { page: 'match', login: sess.login, users: to_array, default_user: user_login })
     }
 }

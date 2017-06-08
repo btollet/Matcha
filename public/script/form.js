@@ -20,6 +20,10 @@ function bio_count () {
     let regex = /^[a-zA-Z0-9 \n\r]*$/;
 
     count.innerHTML = 500 - bio.value.length;
+    if (count.innerHTML >= 0)
+        count.style.color = ''
+    else
+        count.style.color = "red"
     if (regex.test(bio.value)) {
         div.setAttribute('class', 'form-group has-success');
         bio_err.setAttribute('hidden', 'hidden');
@@ -40,7 +44,6 @@ function send() {
     let request = new XMLHttpRequest();
     request.onload = () => {
         if (request.readyState == 4 && request.status == 200) {
-            console.log(request.responseText);
             if (request.responseText == 'ok')
             document.getElementById('main_div').innerHTML = '<center>Formulaire enregistrer</center>';
         }
@@ -56,7 +59,7 @@ function skip() {
             if (request.readyState == 4 && request.status == 200) {
                 console.log(request.responseText);
                 if (request.responseText == 'ok')
-                document.getElementById('main_div').innerHTML = '<center>Formulaire skip</center>';
+                document.getElementById('main_div').innerHTML = '<center>Formulaire passer, aller dans "mon compte" pour ajouter vos informations</center>';
             }
         }
         request.open("POST", "/form_skip");

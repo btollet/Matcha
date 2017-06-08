@@ -2,7 +2,12 @@ let notif_js = require('./notif')
 
 module.exports = {
     new_mes: (info, bdd, res, sess, notif, chat) => {
+        let regex = /^[a-zA-Z0-9 \n\r.,!?()#éèêà]*$/
+
+        if (regex.test(info.mes) && info.mes.length && info.mes.length <= 500)
         new_mes_check(info, bdd, res, sess, notif, chat)
+        else
+        res.end('error')
     },
 
     chat_load: (login, bdd, res, sess) => {

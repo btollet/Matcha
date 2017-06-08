@@ -17,14 +17,15 @@
   },
   "homepage": "https://github.com/btollet/Matcha#readme",
   "dependencies": {
-    "express": "",
+    "bcrypt": "",
     "ejs": "",
+    "express": "",
+    "express-session": "",
+    "fs": "",
     "mongodb": "",
     "multer": "",
     "nodemon": "",
-    "bcrypt": "",
-    "express-session": "",
-    "fs": "",
+    "sendmail": "^1.1.1",
     "socket.io": ""
   }
 }

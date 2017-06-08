@@ -129,6 +129,13 @@ module.exports = {
         })
         sess.first_form = 'ok'
         res.end('ok')
+    },
+
+    pass_reini: (form, bdd, res) => { // Mot de passe avec lien mail
+        if (check_pass(form))
+            pass_reini_part2(form, bdd, res)
+        else
+        res.end('error')
     }
 }
 
@@ -188,6 +195,19 @@ async function check_pass_part2(form, bdd, res, sess) {
         }
         else
         res.end('error')
+    }
+    else
+        res.end('error')
+}
+
+async function pass_reini_part2(form, bdd, res) {
+    let regex = new RegExp(["^", form.login, "$"].join(""), "i")
+    let find = await bdd.collection('users').findOne({ login: regex })
+    if (find) {
+        let new_pass = await bcrypt.hash(form.pass, 10)
+        bdd.collection('users').update({ login: regex }, { $set: { 'pass': new_pass }})
+        bdd.collection('mail_reset').remove({ login: regex})
+        res.end('ok')
     }
     else
         res.end('error')
