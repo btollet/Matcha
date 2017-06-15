@@ -26,7 +26,7 @@ module.exports = {
             else if (name === 'match')
             match_js.match(bdd, res, sess, user)
             else if (name === 'historique')
-            normal_page(name, res, sess)
+            historique(name, bdd, res, sess)
             else
             wall_js.no_option(bdd, res, sess)
         }
@@ -45,8 +45,11 @@ async function new_pass(name, bdd, res, user) {
     res.render('pages/' + name, { page: name, login: null, valid: valid, pass_login: user.login, pass_key: user.key })
 }
 
-async function normal_page(name, res, sess) {
-    res.render('pages/' + name, { page: name, login: sess.login})
+async function historique(name, bdd, res, sess) {
+    let histo = await bdd.collection('historique').find({ login: sess.login}).toArray()
+    let result = await histo.sort((a, b) => a.date - b.date )
+
+    res.render('pages/' + name, { page: name, login: sess.login, histo: result})
 }
 
 async function picture_tag(name, bdd, res, sess) {
@@ -99,10 +102,15 @@ async function account(name, bdd, res, sess, user, notif) {
             let mes = `<a href="account?login=${sess.login}">${sess.login}</a> a visiter votre profil`
             notif_js.send_notif(info.login, mes, bdd, sess, notif)
 
+            let date = Date.now()
+            bdd.collection('historique').insertOne({ login: sess.login, mes: `Vous avez visiter le profil de <a href='account/${info.login}'>${info.login}</a>`, date: date })
+            bdd.collection('historique').insertOne({ login: info.login, mes: `<a href='account/${sess.login}'>${sess.login}</a> a visiter votre profil`, date: date })
+
             delete info.mail
             if (info.fake >= 10)
             fake = true;
         }
+
         delete info.pass
         delete info._id
         delete info.fake

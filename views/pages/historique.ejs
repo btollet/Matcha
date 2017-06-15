@@ -13,7 +13,31 @@
 
     <div class="container">
         <div id="div_main" class="jumbotron">
-            Historique
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th style="vertical-align:middle; text-align:center">Date</th>
+                        <th style="vertical-align:middle; text-align:center">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% let i = 0
+                    histo.forEach((val) => { %>
+                        <tr>
+                            <th style="vertical-align:middle; text-align:center"><span id='date<%= i %>'></span></th>
+                            <th style="vertical-align:middle; text-align:center"><span id='mes<%= i %>'></span></th>
+                            <script>
+                                let date = <%- val.date %>
+                                console.log('<%= val.mes %>')
+                                function pad(s) { return (s < 10) ? '0' + s : s }
+                                var d = new Date(date)
+                                document.getElementById('date<%= i %>').innerHTML = `${pad(d.getDate())}/${pad(d.getMonth()+1)}/${pad(d.getFullYear())} ${pad(d.getHours())}:${pad(d.getMinutes())}`
+                                document.getElementById('mes<%= i %>').innerHTML = '<%= val.mes %>'
+                            </script>
+                        </tr>
+                    <% i++ }) %>
+                </tbody>
+            </table>
         </div>
     </div>
 
