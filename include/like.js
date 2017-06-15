@@ -16,8 +16,8 @@ async function check_like(name, bdd, res, sess, notif) {
             if (is_like) {
                 bdd.collection('like').remove({ login: sess.login, like: name })
                 let date = Date.now()
-                bdd.collection('historique').insertOne({ login: sess.login, mes: `Vous avez dislike <a href='account/${name}'>${name}</a>`, date: date })
-                bdd.collection('historique').insertOne({ login: name, mes: `<a href='account/${sess.login}'>${sess.login}</a> ne vous like plus`, date: date })
+                bdd.collection('historique').insertOne({ login: sess.login, mes: `Vous avez dislike`, date: date, profil: name })
+                bdd.collection('historique').insertOne({ login: name, mes: `ne vous like plus`, date: date, profil: sess.login })
 
                 let mes = `<a href="account?login=${sess.login}">${sess.login}</a> ne vous like plus`
                 notif_js.send_notif(name, mes, bdd, sess, notif)
@@ -32,8 +32,8 @@ async function check_like(name, bdd, res, sess, notif) {
                 mes = `<a href="account?login=${sess.login}">${sess.login}</a> vous like`
                 bdd.collection('like').insertOne({ login: sess.login, like: name })
                 let date = Date.now()
-                bdd.collection('historique').insertOne({ login: sess.login, mes: `Vous avez like <a href='account/${name}'>${name}</a>`, date: date })
-                bdd.collection('historique').insertOne({ login: name, mes: `<a href='account/${sess.login}'>${sess.login}</a> vous as like`, date: date })
+                bdd.collection('historique').insertOne({ login: sess.login, mes: `Vous avez like`, date: date, profil: name })
+                bdd.collection('historique').insertOne({ login: name, mes: `vous as like`, date: date, profil: sess.login })
                 notif_js.send_notif(name, mes, bdd, sess, notif)
                 res.end('like')
             }

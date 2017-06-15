@@ -47,7 +47,7 @@ async function new_pass(name, bdd, res, user) {
 
 async function historique(name, bdd, res, sess) {
     let histo = await bdd.collection('historique').find({ login: sess.login}).toArray()
-    let result = await histo.sort((a, b) => a.date - b.date )
+    let result = await histo.sort((a, b) => b.date - a.date )
 
     res.render('pages/' + name, { page: name, login: sess.login, histo: result})
 }
@@ -103,8 +103,8 @@ async function account(name, bdd, res, sess, user, notif) {
             notif_js.send_notif(info.login, mes, bdd, sess, notif)
 
             let date = Date.now()
-            bdd.collection('historique').insertOne({ login: sess.login, mes: `Vous avez visiter le profil de <a href='account/${info.login}'>${info.login}</a>`, date: date })
-            bdd.collection('historique').insertOne({ login: info.login, mes: `<a href='account/${sess.login}'>${sess.login}</a> a visiter votre profil`, date: date })
+            bdd.collection('historique').insertOne({ login: sess.login, mes: `Vous avez visiter le profil de`, date: date, profil: info.login })
+            bdd.collection('historique').insertOne({ login: info.login, mes: `a visiter votre profil`, date: date, profil: sess.login })
 
             delete info.mail
             if (info.fake >= 10)

@@ -25,14 +25,17 @@
                     histo.forEach((val) => { %>
                         <tr>
                             <th style="vertical-align:middle; text-align:center"><span id='date<%= i %>'></span></th>
-                            <th style="vertical-align:middle; text-align:center"><span id='mes<%= i %>'></span></th>
+                            <th style="vertical-align:middle; text-align:center">
+                                <% if (val.mes === 'a visiter votre profil' || val.mes === 'ne vous like plus' || val.mes === 'vous as like') { %><a href='account?login=<%= val.profil %>'><%= val.profil %></a> <% } %>
+                                <%= val.mes %>
+                                <% if (val.mes === 'Vous avez visiter le profil de' || val.mes === 'Vous avez dislike' || val.mes === 'Vous avez like') { %> <a href='account?login=<%= val.profil %>'><%= val.profil %></a><% } %>
+                            </th>
+
                             <script>
-                                let date = <%- val.date %>
-                                console.log('<%= val.mes %>')
+                                date = <%- val.date %>
                                 function pad(s) { return (s < 10) ? '0' + s : s }
                                 var d = new Date(date)
                                 document.getElementById('date<%= i %>').innerHTML = `${pad(d.getDate())}/${pad(d.getMonth()+1)}/${pad(d.getFullYear())} ${pad(d.getHours())}:${pad(d.getMinutes())}`
-                                document.getElementById('mes<%= i %>').innerHTML = '<%= val.mes %>'
                             </script>
                         </tr>
                     <% i++ }) %>
