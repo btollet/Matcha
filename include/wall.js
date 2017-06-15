@@ -10,7 +10,7 @@ module.exports = {
         else if (option.man === 'false' && option.woman === 'true')
         gender[0] = null
 
-        let orien = ['Heterosexuel', 'Gay / Lesbienne', 'Bisexuel']
+        let orien = ['Heterosexuel', 'Homosexuel', 'Bisexuel']
         if (!(option.hetero === option.gay && option.gay === option.bi)) {
             if (option.hetero === 'false')
             orien[0] = null

@@ -242,7 +242,7 @@ function check_age (form) {
 }
 
 function check_orient (form) {
-    if (form.orientation === 'Heterosexuel' || form.orientation === 'Gay / Lesbienne' || form.orientation === 'Bisexuel')
+    if (form.orientation === 'Heterosexuel' || form.orientation === 'Homosexuel' || form.orientation === 'Bisexuel')
     return (true)
     return (false)
 }

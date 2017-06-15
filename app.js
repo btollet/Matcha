@@ -41,7 +41,11 @@ let chat_js = require('./include/chat.js')
 let mail_js = require('./include/mail.js')
 
 
-app.use(session({secret: 'podl5amc-daso12w' }))
+app.use(session({
+    secret: 'podl5amc-daso12w',
+    resave: true,
+    saveUninitialized: true
+}))
 let sess
 
 
@@ -65,17 +69,35 @@ var chat = io
     socket.emit()
 })
 
-//AIzaSyCSnbTXmzYBfWPWnHtbsrL2zpr4hciwsZA
+function distance(lat1, lon1, lat2, lon2) {
+	var radlat1 = Math.PI * lat1/180
+	var radlat2 = Math.PI * lat2/180
+	var theta = lon1-lon2
+	var radtheta = Math.PI * theta/180
+	var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+	dist = Math.acos(dist)
+	dist = dist * 180/Math.PI
+	dist = dist * 60 * 1.1515
+	dist = dist * 1.609344
+	return dist
+}
 
 //--- App.get
 app.get('/', (req, res) => {
     //let ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-    var ip = "207.97.227.239";
+    var ip = "62.210.32.5";
     var geo = geoip.lookup(ip)
     console.log(geo)
 
-    geocoder.geocode("Atlanta, GA", function ( err, data ) {
-        console.log(data)
+    geocoder.geocode("boulevard anatole France, Saint-Denis", function ( err, data ) {
+        if (err) {
+            console.log(err)
+            return
+        }
+        if (data.results[0])
+            console.log(data.results[0].geometry.location)
+        let test = distance(geo.ll[0], geo.ll[1], data.results[0].geometry.location.lat, data.results[0].geometry.location.lng)
+        console.log(test)
     });
     page_js.call_page('wall', bdd, res, req.session, null, notif)
 })
