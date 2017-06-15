@@ -3,6 +3,8 @@ var multer = require('multer')
 var MongoClient = require('mongodb').MongoClient
 var session = require('express-session')
 var sendmail = require('sendmail')()
+var geoip = require('geoip-lite')
+var geocoder = require('geocoder');
 const path = require('path')
 
 var upload = multer({
@@ -63,8 +65,18 @@ var chat = io
     socket.emit()
 })
 
+//AIzaSyCSnbTXmzYBfWPWnHtbsrL2zpr4hciwsZA
+
 //--- App.get
 app.get('/', (req, res) => {
+    //let ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+    var ip = "207.97.227.239";
+    var geo = geoip.lookup(ip)
+    console.log(geo)
+
+    geocoder.geocode("Atlanta, GA", function ( err, data ) {
+        console.log(data)
+    });
     page_js.call_page('wall', bdd, res, req.session, null, notif)
 })
 

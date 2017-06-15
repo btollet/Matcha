@@ -45,7 +45,10 @@
                     like.setAttribute('class', 'btn btn-success')
                 }
                 else if (request.responseText === 'unlike') {
+                    if (pic.length > 0)
                     like.setAttribute('class', 'btn btn-secondary')
+                    else
+                    like.setAttribute('hidden', 'hidden')
                 }
             }
         }
@@ -146,6 +149,10 @@
                             <% } else { %>
                                 <button id='like' onclick='like()' type="button" class="btn btn-secondary" style="width: 200px" <% if(bloque) { %>hidden<% } %>>♥</button>
                             <% } %>
+                        <% } else if(like === 'i like' || like === 'match') { %>
+                        </br>
+                        </br>
+                            <button id='like' onclick='like()' type="button" class="btn btn-success" style="width: 200px" <% if(bloque) { %>hidden<% } %>>♥</button>
                         <% } else { %>
                             <p>Ne peu pas etre like sans photo</p>
                         <% } %>

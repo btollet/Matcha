@@ -22,8 +22,11 @@
     "express": "",
     "express-session": "",
     "fs": "",
+    "geocoder": "^0.2.3",
+    "geoip-lite": "^1.2.1",
     "mongodb": "",
     "multer": "",
+    "node-where": "^1.1.0",
     "nodemon": "",
     "sendmail": "^1.1.1",
     "socket.io": ""

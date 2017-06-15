@@ -24,18 +24,23 @@ async function check_like(name, bdd, res, sess, notif) {
                 res.end('unlike')
             }
             else {
-                let like_me = await bdd.collection('like').findOne({ login: name, like: sess.login})
-                let mes
-                if (like_me)
-                mes = `<a href="account?login=${sess.login}">${sess.login}</a> vous like aussi, le chat est disponnible`
+                let have_pic = await bdd.collection('picture').findOne({ login: name })
+                if (have_pic) {
+                    let like_me = await bdd.collection('like').findOne({ login: name, like: sess.login})
+                    let mes
+                    if (like_me)
+                    mes = `<a href="account?login=${sess.login}">${sess.login}</a> vous like aussi, le chat est disponnible`
+                    else
+                    mes = `<a href="account?login=${sess.login}">${sess.login}</a> vous like`
+                    bdd.collection('like').insertOne({ login: sess.login, like: name })
+                    let date = Date.now()
+                    bdd.collection('historique').insertOne({ login: sess.login, mes: `Vous avez like`, date: date, profil: name })
+                    bdd.collection('historique').insertOne({ login: name, mes: `vous as like`, date: date, profil: sess.login })
+                    notif_js.send_notif(name, mes, bdd, sess, notif)
+                    res.end('like')
+                }
                 else
-                mes = `<a href="account?login=${sess.login}">${sess.login}</a> vous like`
-                bdd.collection('like').insertOne({ login: sess.login, like: name })
-                let date = Date.now()
-                bdd.collection('historique').insertOne({ login: sess.login, mes: `Vous avez like`, date: date, profil: name })
-                bdd.collection('historique').insertOne({ login: name, mes: `vous as like`, date: date, profil: sess.login })
-                notif_js.send_notif(name, mes, bdd, sess, notif)
-                res.end('like')
+                res.end('error')
             }
         }
         else
