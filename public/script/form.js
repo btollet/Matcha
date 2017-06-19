@@ -57,7 +57,6 @@ function skip() {
         let request = new XMLHttpRequest();
         request.onload = () => {
             if (request.readyState == 4 && request.status == 200) {
-                console.log(request.responseText);
                 if (request.responseText == 'ok')
                 document.getElementById('main_div').innerHTML = '<center>Formulaire passer, aller dans "mon compte" pour ajouter vos informations</center>';
             }

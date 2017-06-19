@@ -1,8 +1,10 @@
 let fs = require('fs')
 let bcrypt = require('bcrypt')
+let geoip = require('geoip-lite')
+let geocoder = require('geocoder')
 
 module.exports = {
-    save_first_form: (form, bdd, res, sess) => {
+    save_first_form: (form, bdd, res, sess, req) => {
         if (check_gender(form) && check_age(form) && check_orient(form) && check_bio(form)) {
             //--- Preference
             let pref = null
@@ -21,6 +23,11 @@ module.exports = {
                     pref = '♀ Femme'
                 }
             }
+            let ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+            if (ip === '127.0.0.1')
+                ip = "62.210.32.5"
+            let geo = geoip.lookup(ip)
+
             bdd.collection('users').update({ login: sess.login },
             {
                 $set: {
@@ -29,7 +36,9 @@ module.exports = {
                 orientation: form.orientation,
                 pref: pref,
                 bio: form.bio,
-                first_form: 'ok'}
+                first_form: 'ok',
+                pos: geo.ll,
+                city: geo.city}
             })
             sess.first_form = 'ok'
             res.end('ok')
@@ -120,12 +129,19 @@ module.exports = {
         check_pic_del(name, bdd, res, sess)
     },
 
-    skip: (bdd, res, sess) => {
+    skip: (bdd, res, sess, req) => {
+        let ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+        if (ip === '127.0.0.1')
+            ip = "62.210.32.5"
+        let geo = geoip.lookup(ip)
+
         bdd.collection('users').update({ login: sess.login },
         {
             $set: {
             orientation: 'Bisexuel',
-            first_form: 'ok' }
+            first_form: 'ok',
+            pos: geo.ll,
+            city: geo.city}
         })
         sess.first_form = 'ok'
         res.end('ok')
@@ -136,6 +152,29 @@ module.exports = {
             pass_reini_part2(form, bdd, res)
         else
         res.end('error')
+    },
+
+    maj_pos: (form, bdd, res, sess, req) => {
+        if (form.auto === 'true') {
+            let ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+            if (ip === '127.0.0.1')
+                ip = "62.210.32.5"
+            let geo = geoip.lookup(ip)
+            bdd.collection('users').update({ login: sess.login }, { $set: { pos: geo.ll, city: geo.city }})
+            res.json(geo.city)
+        }
+        else {
+            geocoder.geocode(form.city , function ( err, data ) {
+                if (data.results[0]) {
+                    pos = [data.results[0].geometry.location.lat, data.results[0].geometry.location.lng]
+                    city = form.city
+                    bdd.collection('users').update({ login: sess.login }, { $set: { pos: pos, city: form.city }})
+                    res.json(form.city)
+                }
+                else
+                res.end('error')
+            })
+        }
     }
 }
 
@@ -149,7 +188,6 @@ async function check_picture (name, type, bdd, res, sess) {
     if (exist) {
         fs.unlink('public/picture/' + exist.name, (err) => {
             if (err) throw err
-            console.log('File delete -> ' + exist.name)
         })
         bdd.collection('picture').update({ login: sess.login }, {
             $set: { name: name }
@@ -219,7 +257,6 @@ async function check_pic_del(name, bdd, res, sess) {
         bdd.collection('picture').deleteOne({ login: sess.login, name: name })
         fs.unlink('public/picture/' + name, (err) => {
             if (err) throw err
-            console.log('File delete -> ' + name)
         })
         res.send('ok')
     }

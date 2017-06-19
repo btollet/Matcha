@@ -19,7 +19,6 @@ async function add_tag_part2(tag, bdd, res, sess) {
     else {
         bdd.collection('tag').insertOne({ login: sess.login, tag: tag}, (err) => {
             if (err) return ('error');
-            console.log(sess.login + ' add tag: ' + tag);
         });
         res.end('ok');
     }

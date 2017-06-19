@@ -221,7 +221,23 @@
                                                 <option <% if (user.orientation === 'Bisexuel') { %>selected="selected"<% } %> >Bisexuel</option>
                                             </select>
                                         </div>
-                                        <button type="button" class="btn btn-primary" onclick="save_info()">Enregistrer</button>
+                                        <div class="form-group">
+                                            <button type="button" class="btn btn-primary" onclick="save_info()">Enregistrer</button>
+                                        </div></br>
+                                        <div class="form-group">
+                                            <label>Lieu</label>
+                                            <div class="form-check">
+                                                <label class="form-check-label">
+                                                    <input class="form-check-input" type="checkbox" id="auto" checked="checked" onclick="auto()">
+                                                     Automatique
+                                                </label>
+                                            </div>
+                                            <div id='pos_div' class="form-group">
+                                                <input type="text" class="form-control" id="pos" value="<%= user.city %>" maxlength="200" disabled="disabled">
+                                                <script>document.getElementById('pos').addEventListener('change', () => document.getElementById('pos_div').setAttribute('class', 'form-group'));</script>
+                                            </div>
+                                        </div>
+                                        <button type="button" class="btn btn-primary" onclick="maj_pos()">MAJ</button>
                                     </blockquote>
                                 <% } %>
                             </div>

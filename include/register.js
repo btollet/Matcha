@@ -46,10 +46,7 @@ async function find_user(user, bdd, res) {
             "first_form": '',
             "fake": 0,
             "last_visit": null
-        }, (err) => {
-            if (err) return(console.log(err));
-            console.log('Bdd add user: ' + user.login);
-        });
+        })
         res.end('ok');
     }
     else

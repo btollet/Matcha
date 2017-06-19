@@ -116,6 +116,7 @@ async function account(name, bdd, res, sess, user, notif) {
         delete info.fake
         delete info.pref
         delete info.first_form
+        delete info.pos
 
         res.render('pages/' + name, {
             page: name,

@@ -406,3 +406,33 @@ function pass_confirm_check() {
     else
     danger(pass_confirm, div, error, error_mes);
 }
+
+
+function auto() {
+    let div = document.getElementById('pos')
+    if (document.getElementById('auto').checked === true)
+    div.setAttribute('disabled', 'disabled')
+    else
+    div.removeAttribute('disabled')
+}
+
+function maj_pos() {
+    let formData = new FormData()
+    formData.append('auto', document.getElementById('auto').checked)
+    formData.append('city', document.getElementById('pos').value)
+
+    let request = new XMLHttpRequest()
+    request.onload = () => {
+        if (request.readyState == 4 && request.status == 200) {
+            rep = request.responseText
+            if (rep !== 'error') {
+                document.getElementById('pos_div').setAttribute('class', 'form-group has-success')
+                document.getElementById('pos').value = JSON.parse(rep)
+            }
+            else
+            document.getElementById('pos_div').setAttribute('class', 'form-group has-danger')
+        }
+    }
+    request.open("POST", "/maj_pos")
+    request.send(formData)
+}

@@ -4,7 +4,7 @@ var MongoClient = require('mongodb').MongoClient
 var session = require('express-session')
 var sendmail = require('sendmail')()
 var geoip = require('geoip-lite')
-var geocoder = require('geocoder');
+var geocoder = require('geocoder')
 const path = require('path')
 
 var upload = multer({
@@ -84,21 +84,6 @@ function distance(lat1, lon1, lat2, lon2) {
 
 //--- App.get
 app.get('/', (req, res) => {
-    //let ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-    var ip = "62.210.32.5";
-    var geo = geoip.lookup(ip)
-    console.log(geo)
-
-    geocoder.geocode("boulevard anatole France, Saint-Denis", function ( err, data ) {
-        if (err) {
-            console.log(err)
-            return
-        }
-        if (data.results[0])
-            console.log(data.results[0].geometry.location)
-        let test = distance(geo.ll[0], geo.ll[1], data.results[0].geometry.location.lat, data.results[0].geometry.location.lng)
-        console.log(test)
-    });
     page_js.call_page('wall', bdd, res, req.session, null, notif)
 })
 
@@ -180,12 +165,19 @@ app.post('/del_picture', upload.fields([]), (req, res) => {
     profil_js.del_picture(req.body.name, bdd, res, req.session)
 })
 
+app.post('/maj_pos', upload.fields([]), (req, res) => {
+    if (req.body.city)
+    profil_js.maj_pos(req.body, bdd, res, req.session, req)
+    else
+    res.end('error')
+})
+
 app.post('/form', upload.fields([]), (req, res) => {
-    profil_js.save_first_form(req.body, bdd, res, req.session)
+    profil_js.save_first_form(req.body, bdd, res, req.session, req)
 })
 
 app.post('/form_skip', upload.fields([]), (req, res) => {
-    profil_js.skip(bdd, res, req.session)
+    profil_js.skip(bdd, res, req.session, req)
 })
 
 app.post('/notif', (req, res) => {
