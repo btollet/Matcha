@@ -69,7 +69,7 @@
                             </div>
                             <div class='form-check'>
                                 Distance:
-                                <small class="text-muted">Maximum <input id='s_dis' type="number" min='0' value="100" style="width:40px"></small>
+                                <small class="text-muted">Maximum <input id='s_dis' type="number" min='1' value="50" style="width:40px"></small>
                             </div>
                         </div>
                     </div></br>
@@ -107,8 +107,8 @@
             <div class="form-inline">
                 <label class="mr-sm-2" for="inlineFormCustomSelect">Trier par</label>
                 <select class="custom-select mb-2 mr-sm-2 mb-sm-0" id="sort">
-                    <option selected>Age</option>
-                    <option >Distance</option>
+                    <option selected>Distance</option>
+                    <option >Age</option>
                     <option >Score</option>
                     <option >Tag en commun</option>
                 </select>
@@ -131,6 +131,11 @@
                         <script>document.getElementById('age_min').addEventListener('change', draw_table);</script>
                         <small class="text-muted">Max <input id="age_max" type="number" min='16' max='120' value="120" style="width:40px"></small>
                         <script>document.getElementById('age_max').addEventListener('change', draw_table);</script>
+                    </th>
+                    <th style="vertical-align:middle; text-align:center">
+                        Distance(Km)</br>
+                        <small class="text-muted">Max <input id="dist_max" type="number" min='1' value="50" style="width:40px"></small>
+                        <script>document.getElementById('dist_max').addEventListener('change', draw_table);</script>
                     </th>
                     <th style="vertical-align:middle; text-align:center">
                         Tag en commun</br>

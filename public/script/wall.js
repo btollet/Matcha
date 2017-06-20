@@ -16,6 +16,7 @@ function draw_table() {
             </th>
             <th style="vertical-align:middle; text-align:center">${val[0]}</br>${val[1].gender}</th>
             <th style="vertical-align:middle; text-align:center">${val[1].age}</th>
+            <th style="vertical-align:middle; text-align:center">${(val[1].dist === 0) ? '< 1' : Math.trunc(val[1].dist)}</th>
             <th style="vertical-align:middle; text-align:center">${val[1].count}</th>
             <th style="vertical-align:middle; text-align:center">${val[1].score}</th>
             <th style="vertical-align:middle; text-align:center"><a href='account?login=${val[0]}'>Voir profil</a></th>
@@ -31,9 +32,10 @@ function check_draw(user) {
     let tag_min = document.getElementById('tag_min').value
     let score_min = document.getElementById('score_min').value
     let score_max = document.getElementById('score_max').value
+    let dist_max = document.getElementById('dist_max').value
 
     if (parseInt(user[1].age) >= age_min && parseInt(user[1].age) <= age_max) {
-        if (parseInt(user[1].count) >= tag_min) {
+        if (parseInt(user[1].count) >= tag_min && parseInt(user[1].dist) <= dist_max) {
             if (parseInt(user[1].score) >= score_min && parseInt(user[1].score) <= score_max)
             return(true)
         }
@@ -62,6 +64,11 @@ function search() {
             if (rep) {
                 users = JSON.parse(rep)
                 document.getElementById('search').click()
+                document.getElementById('age_min').value = document.getElementById('s_age_min').value
+                document.getElementById('age_max').value = document.getElementById('s_age_max').value
+                document.getElementById('score_min').value = document.getElementById('s_score_min').value
+                document.getElementById('score_max').value = document.getElementById('s_score_max').value
+                document.getElementById('dist_max').value = document.getElementById('s_dis').value
                 sort()
                 draw_table()
             }
@@ -77,29 +84,27 @@ function sort() {
 
     if (sort_by === 'Age') {
         if (sens === 'Croissant')
-        users.sort((a, b) => a[1].age - b[1].age)
+        users.sort((a, b) => (a[1].age === b[1].age) ? a[1].dist - b[1].dist : a[1].age - b[1].age)
         else
-        users.sort((a, b) => b[1].age - a[1].age)
+        users.sort((a, b) => (a[1].age === b[1].age) ? a[1].dist - b[1].dist : b[1].age - a[1].age)
     }
-    /*
     else if (sort_by === 'Distance') {
-    if (sens === 'Croissant')
-    users.sort((a, b) => a[1].age - b[1].count)
-    else
-    users.sort((a, b) => b[1].age - a[1].count)
-
-    */
+        if (sens === 'Croissant')
+        users.sort((a, b) => (a[1].dist === b[1].dist) ? b[1].count - a[1].count : a[1].dist - b[1].dist)
+        else
+        users.sort((a, b) => (a[1].dist === b[1].dist) ? b[1].count - a[1].count : b[1].dist - a[1].dist)
+    }
     else if (sort_by === 'Score') {
         if (sens === 'Croissant')
-        users.sort((a, b) => a[1].score - b[1].score)
+        users.sort((a, b) => (a[1].score === b[1].score) ? a[1].dist - b[1].dist : a[1].score - b[1].score)
         else
-        users.sort((a, b) => b[1].score - a[1].score)
+        users.sort((a, b) => (a[1].score === b[1].score) ? a[1].dist - b[1].dist : b[1].score - a[1].score)
     }
     else if (sort_by === 'Tag en commun') {
         if (sens === 'Croissant')
-        users.sort((a, b) => a[1].count - b[1].count)
+        users.sort((a, b) => (a[1].count === b[1].count) ? a[1].dist - b[1].dist :  a[1].count - b[1].count)
         else
-        users.sort((a, b) => b[1].count - a[1].count)
+        users.sort((a, b) => (a[1].count === b[1].count) ? a[1].dist - b[1].dist : b[1].count - a[1].count)
     }
 
     draw_table()

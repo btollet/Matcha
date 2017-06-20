@@ -39,6 +39,7 @@ let wall_js = require('./include/wall.js')
 let bloque_js = require('./include/bloque.js')
 let chat_js = require('./include/chat.js')
 let mail_js = require('./include/mail.js')
+let install_js = require('./include/install.js')
 
 
 app.use(session({
@@ -68,19 +69,6 @@ var chat = io
 .on('connection', function (socket) {
     socket.emit()
 })
-
-function distance(lat1, lon1, lat2, lon2) {
-	var radlat1 = Math.PI * lat1/180
-	var radlat2 = Math.PI * lat2/180
-	var theta = lon1-lon2
-	var radtheta = Math.PI * theta/180
-	var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
-	dist = Math.acos(dist)
-	dist = dist * 180/Math.PI
-	dist = dist * 60 * 1.1515
-	dist = dist * 1.609344
-	return dist
-}
 
 //--- App.get
 app.get('/', (req, res) => {
@@ -113,21 +101,29 @@ app.get('/new_pass', (req, res) => {
     page_js.call_page('new_pass', bdd, res, req.session, req.query, notif)
 })
 
+app.get('/install', (req, res) => {
+    install_js.gen_bdd(bdd, res)
+})
+
 
 //--- App.post
 app.post('/register', upload.fields([]), (req, res) => {
+    sess = req.session
     register_js.check_user(req.body, bdd, res)
 })
 
 app.post('/login_check', upload.fields([]), (req, res) => {
+    sess = req.session
     register_js.check_login(req.body.login, bdd, res)
 })
 
 app.post('/mail_check', upload.fields([]), (req, res) => {
+    sess = req.session
     register_js.check_mail(req.body.mail, bdd, res)
 })
 
 app.post('/login', upload.fields([]), (req, res) => {
+    sess = req.session
     log_js.log_user(req.body, bdd, res, req.session)
 })
 
@@ -166,7 +162,7 @@ app.post('/del_picture', upload.fields([]), (req, res) => {
 })
 
 app.post('/maj_pos', upload.fields([]), (req, res) => {
-    if (req.body.city)
+    if (req.body.city || req.body.auto === 'true')
     profil_js.maj_pos(req.body, bdd, res, req.session, req)
     else
     res.end('error')

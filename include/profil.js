@@ -24,21 +24,27 @@ module.exports = {
                 }
             }
             let ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-            if (ip === '127.0.0.1')
-                ip = "62.210.32.5"
-            let geo = geoip.lookup(ip)
+            if (ip === '127.0.0.1'){
+                geocoder.geocode('96 Boulevard Bessières, 75017 Paris' , function ( err, data ) {
+                    if (data.results[0]) {
+                        pos = [data.results[0].geometry.location.lat, data.results[0].geometry.location.lng]
+                        city = data.results[0].address_components[2].long_name
+                        bdd.collection('users').update({ login: sess.login }, { $set: { pos: pos, city: city }})
+                    }
+                })
+            }
+            else {
+                let geo = geoip.lookup(ip)
+                bdd.collection('users').update({ login: sess.login }, { $set: { pos: geo.ll, city: geo.city}})
+            }
 
-            bdd.collection('users').update({ login: sess.login },
-            {
-                $set: {
+            bdd.collection('users').update({ login: sess.login }, { $set: {
                 gender: form.gender,
                 age: parseInt(form.age),
                 orientation: form.orientation,
                 pref: pref,
                 bio: form.bio,
-                first_form: 'ok',
-                pos: geo.ll,
-                city: geo.city}
+                first_form: 'ok',}
             })
             sess.first_form = 'ok'
             res.end('ok')
@@ -49,10 +55,7 @@ module.exports = {
 
     save_bio: (form, bdd, res, sess) => {
         if (check_bio(form)) {
-            bdd.collection('users').update({ login: sess.login },
-            {
-                $set: { bio: form.bio }
-            })
+            bdd.collection('users').update({ login: sess.login }, { $set: { bio: form.bio }})
             res.end('ok')
         }
         else
@@ -78,15 +81,13 @@ module.exports = {
                     pref = '♀ Femme'
                 }
             }
-            bdd.collection('users').update({ login: sess.login },
-            {
-                $set: {
-                    f_name: form.f_name,
-                    name: form.name,
-                    gender: form.gender,
-                    age: parseInt(form.age),
-                    orientation: form.orientation,
-                    pref: pref }
+            bdd.collection('users').update({ login: sess.login },{ $set: {
+                f_name: form.f_name,
+                name: form.name,
+                gender: form.gender,
+                age: parseInt(form.age),
+                orientation: form.orientation,
+                pref: pref }
             })
             res.end('ok')
         }
@@ -96,14 +97,14 @@ module.exports = {
 
     save_mail: (form, bdd, res, sess) => {
         if (check_mail(form))
-            check_mail_part2(form, bdd, res, sess)
+        check_mail_part2(form, bdd, res, sess)
         else
         res.end('error')
     },
 
     save_pass: (form, bdd, res, sess) => {
         if (check_pass(form))
-            check_pass_part2(form, bdd, res, sess)
+        check_pass_part2(form, bdd, res, sess)
         else
         res.end('error1')
     },
@@ -131,25 +132,32 @@ module.exports = {
 
     skip: (bdd, res, sess, req) => {
         let ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-        if (ip === '127.0.0.1')
-            ip = "62.210.32.5"
-        let geo = geoip.lookup(ip)
+        if (ip === '127.0.0.1') {
+            geocoder.geocode('96 Boulevard Bessières, 75017 Paris' , function ( err, data ) {
+                if (data.results[0]) {
+                    pos = [data.results[0].geometry.location.lat, data.results[0].geometry.location.lng]
+                    city = data.results[0].address_components[2].long_name
+                    bdd.collection('users').update({ login: sess.login }, { $set: {orientation: 'Bisexuel', first_form: 'ok', pos: pos, city: city }})
+                }
+            })
+        }
+        else {
+            let geo = geoip.lookup(ip)
 
-        bdd.collection('users').update({ login: sess.login },
-        {
-            $set: {
-            orientation: 'Bisexuel',
-            first_form: 'ok',
-            pos: geo.ll,
-            city: geo.city}
-        })
+            bdd.collection('users').update({ login: sess.login },{ $set: {
+                orientation: 'Bisexuel',
+                first_form: 'ok',
+                pos: geo.ll,
+                city: geo.city}
+            })
+        }
         sess.first_form = 'ok'
         res.end('ok')
     },
 
     pass_reini: (form, bdd, res) => { // Mot de passe avec lien mail
         if (check_pass(form))
-            pass_reini_part2(form, bdd, res)
+        pass_reini_part2(form, bdd, res)
         else
         res.end('error')
     },
@@ -157,11 +165,23 @@ module.exports = {
     maj_pos: (form, bdd, res, sess, req) => {
         if (form.auto === 'true') {
             let ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-            if (ip === '127.0.0.1')
-                ip = "62.210.32.5"
-            let geo = geoip.lookup(ip)
-            bdd.collection('users').update({ login: sess.login }, { $set: { pos: geo.ll, city: geo.city }})
-            res.json(geo.city)
+            if (ip === '127.0.0.1') {
+                geocoder.geocode('96 Boulevard Bessières, 75017 Paris' , function ( err, data ) {
+                    if (data.results[0]) {
+                        pos = [data.results[0].geometry.location.lat, data.results[0].geometry.location.lng]
+                        city = data.results[0].address_components[2].long_name
+                        bdd.collection('users').update({ login: sess.login }, { $set: { pos: pos, city: city }})
+                        res.json(city)
+                    }
+                    else
+                    res.end('error')
+                })
+            }
+            else {
+                let geo = geoip.lookup(ip)
+                bdd.collection('users').update({ login: sess.login }, { $set: { pos: geo.ll, city: geo.city }})
+                res.json(geo.city)
+            }
         }
         else {
             geocoder.geocode(form.city , function ( err, data ) {
@@ -235,7 +255,7 @@ async function check_pass_part2(form, bdd, res, sess) {
         res.end('error')
     }
     else
-        res.end('error')
+    res.end('error')
 }
 
 async function pass_reini_part2(form, bdd, res) {
@@ -248,7 +268,7 @@ async function pass_reini_part2(form, bdd, res) {
         res.end('ok')
     }
     else
-        res.end('error')
+    res.end('error')
 }
 
 async function check_pic_del(name, bdd, res, sess) {
